@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="Welcome">Check for your RSA encrypted WiMAX Keys!</string>
+    <string name="app_name">WiMAX RSA Key Checker</string>
+    <string name="Credits">Credits: <a href="http://www.appsbybirbeck.com/">birbeck</a>, <a href="http://xpl0.it">AntiSociaL</a>, LouZiffer, <a href="http://www.twitter.com/SHlFT">shift</a>, <a href="http://android.slushpupie.com">slushpupie</a>, thenuge, <a href="http://shinzul.teamwin-android.com">shinzul</a>, <a href="http://forum.xda-developers.com/member.php?u=1561342">toastcfh</a>, <a href="http://www.sdx-developers.com">sdx-developers.com</a>, <a href="http://twitter.com/teamwinandroid">#teamwin</a> and <a href="http://webchat.freenode.net/">#htc-evo</a>!" </string>
+    <string name="menuAbout">About</string> 
+    <string name="menuDisclaimer">Disclaimer</string>
+    <string name="menuExit">Exit</string>
+    <string name="disclaimerMessage">In order to help further development by better understanding this application\'s usage, google analytics is employed to gather anonymous usage statistics.  Rest assured no personally identifiable information is ever shared and only information relating to this specific application\'s usage would be collected. Appreciate your support!</string>
+    <string name="disclaimerAgree">Agree</string>
+    <string name="disclaimerDisagree">Disagree</string>
+    <string name="aboutMsg">All those mentioned in the credits have been extremely helpful! \nThanks for using my software! \n\n<a href="http://www.joeyconway.com">http://www.joeyconway.com</a></string>
+    <string name="menuAboutOkay">Okay</string>
+    <string name="versionInfo">Version 2.1</string>
+</resources>
