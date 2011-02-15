@@ -43,7 +43,7 @@
 	android:layout_height="wrap_content"
 	android:layout_gravity="center"></Button>
 <Button android:text="Verify Busybox Installed" 
-	android:id="@+id/Button02"
+	android:id="@+id/BusyboxButton"
 	android:layout_height="wrap_content"
 	android:layout_width="wrap_content"
 	android:layout_gravity="center"></Button>

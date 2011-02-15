@@ -27,7 +27,7 @@ import com.joeykrim.wimaxkeys.ShellCommand.CommandResult;
 public class WimaxKeys extends Activity {
 	
    	private Button RootButton;
-   	private Button Button02;
+   	private Button BusyboxButton;
    	private Button Button03;
    	private Button Button04;
    	private TextView finalResults;
@@ -73,7 +73,7 @@ public class WimaxKeys extends Activity {
         		TextView tv = (TextView) findViewById(R.id.FinalResults);
         		tracker.trackEvent("ButtonClicked", "RootCheck", null, 0);
         		RootButton.setEnabled(false);
-        		Button02.setEnabled(false);
+        		BusyboxButton.setEnabled(false);
         		Button03.setEnabled(false);
         		Boolean rootCheck = coretask.hasRootPermission();
         		if(rootCheck == true) {
@@ -93,38 +93,38 @@ public class WimaxKeys extends Activity {
             			tracker.trackEvent("RootResult", "Fail", null, 0);
         			}
         		RootButton.setEnabled(true);
-        		Button02.setEnabled(true);
+        		BusyboxButton.setEnabled(true);
         		Button03.setEnabled(true);
         		tracker.dispatch();
         	}
         });
         
-            Button02 = (Button)findViewById(R.id.Button02);
+            BusyboxButton = (Button)findViewById(R.id.BusyboxButton);
             
-            Button02.setOnClickListener(new View.OnClickListener() {
+            BusyboxButton.setOnClickListener(new View.OnClickListener() {
             	public void onClick(View v) {
             		TextView tv = (TextView) findViewById(R.id.FinalResults);
             		tracker.trackEvent("ButtonClicked", "BusyboxCheck", null, 0);
             		RootButton.setEnabled(false);
-            		Button02.setEnabled(false);
+            		BusyboxButton.setEnabled(false);
             		Button03.setEnabled(false);
             		String busyboxResults = coretask.busyboxPresent();
             		if(busyboxResults == "error"){
             			tracker.trackEvent("BusyboxResult", "Fail", null, 0);
             			tv.setTextColor(0xffff0000);
-           			 	Button02.setTextColor(0xffff0000);
+           			 	BusyboxButton.setTextColor(0xffff0000);
                 		tv.setText("Sorry, you don't have busybox installed correctly! \nFor proper Busybox installation, please search for the BusyBox app by Stericson in the market!");
             			showToast("Sorry, you don't have busybox installed correctly! \nFor proper Busybox installation, please search for the BusyBox app by Stericson in the market!");
             		}
             		else {
             			tracker.trackEvent("BusyboxResult", "Success", null, 0);
             			tv.setTextColor(0xff00C900);
-           			 	Button02.setTextColor(0xff005500);
+           			 	BusyboxButton.setTextColor(0xff005500);
             			tv.setText("Busybox is installed correctly!");
             			showToast("Busybox is installed correctly!");
             		}
             		RootButton.setEnabled(true);
-            		Button02.setEnabled(true);
+            		BusyboxButton.setEnabled(true);
             		Button03.setEnabled(true);
             		tracker.dispatch();
             	}
@@ -137,7 +137,7 @@ public class WimaxKeys extends Activity {
             		TextView tv = (TextView) findViewById(R.id.FinalResults);
             		tracker.trackEvent("ButtonClicked", "WiMAXCheck", null, 0);
             		RootButton.setEnabled(false);
-            		Button02.setEnabled(false);
+            		BusyboxButton.setEnabled(false);
             		Button03.setEnabled(false);
             		String busyboxResults = coretask.busyboxPresent();
             		if(busyboxResults == "error"){
@@ -167,7 +167,7 @@ public class WimaxKeys extends Activity {
             					}
             			}
             		RootButton.setEnabled(true);
-            		Button02.setEnabled(true);
+            		BusyboxButton.setEnabled(true);
             		Button03.setEnabled(true);
             		tracker.dispatch();
             	}
