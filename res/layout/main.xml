@@ -85,7 +85,7 @@
 	android:layout_height="wrap_content"
 	android:textColor="#ffffffff"></TextView>	
 <Button android:text="Author Web Site" 
-	android:id="@+id/Button04" 
+	android:id="@+id/AuthorButton" 
 	android:layout_width="wrap_content" 
 	android:layout_height="wrap_content"></Button>
 <TextView android:text=" " 

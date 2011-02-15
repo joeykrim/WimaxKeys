@@ -29,7 +29,7 @@ public class WimaxKeys extends Activity {
    	private Button RootButton;
    	private Button BusyboxButton;
    	private Button WimaxButton;
-   	private Button Button04;
+   	private Button AuthorButton;
    	private TextView finalResults;
    	private String wimaxPhone = null;
    	public static final String PREFS_NAME = "PrefFile";
@@ -173,10 +173,10 @@ public class WimaxKeys extends Activity {
             	}
             });
             
-            Button04 = (Button)findViewById(R.id.Button04);
+            AuthorButton = (Button)findViewById(R.id.AuthorButton);
             
             /** thanks AntiSociaL */
-            Button04.setOnClickListener(new View.OnClickListener() {
+            AuthorButton.setOnClickListener(new View.OnClickListener() {
             	public void onClick(View v) {
             		tracker.trackEvent("ButtonClicked", "AuthorWebSite", null, 0);
             		tracker.dispatch();
