@@ -28,7 +28,7 @@ public class WimaxKeys extends Activity {
 	
    	private Button RootButton;
    	private Button BusyboxButton;
-   	private Button Button03;
+   	private Button WimaxButton;
    	private Button Button04;
    	private TextView finalResults;
    	private String wimaxPhone = null;
@@ -74,7 +74,7 @@ public class WimaxKeys extends Activity {
         		tracker.trackEvent("ButtonClicked", "RootCheck", null, 0);
         		RootButton.setEnabled(false);
         		BusyboxButton.setEnabled(false);
-        		Button03.setEnabled(false);
+        		WimaxButton.setEnabled(false);
         		Boolean rootCheck = coretask.hasRootPermission();
         		if(rootCheck == true) {
         			tv.setTextColor(0xff00C900);
@@ -94,7 +94,7 @@ public class WimaxKeys extends Activity {
         			}
         		RootButton.setEnabled(true);
         		BusyboxButton.setEnabled(true);
-        		Button03.setEnabled(true);
+        		WimaxButton.setEnabled(true);
         		tracker.dispatch();
         	}
         });
@@ -107,7 +107,7 @@ public class WimaxKeys extends Activity {
             		tracker.trackEvent("ButtonClicked", "BusyboxCheck", null, 0);
             		RootButton.setEnabled(false);
             		BusyboxButton.setEnabled(false);
-            		Button03.setEnabled(false);
+            		WimaxButton.setEnabled(false);
             		String busyboxResults = coretask.busyboxPresent();
             		if(busyboxResults == "error"){
             			tracker.trackEvent("BusyboxResult", "Fail", null, 0);
@@ -125,24 +125,24 @@ public class WimaxKeys extends Activity {
             		}
             		RootButton.setEnabled(true);
             		BusyboxButton.setEnabled(true);
-            		Button03.setEnabled(true);
+            		WimaxButton.setEnabled(true);
             		tracker.dispatch();
             	}
             });
             
-            Button03 = (Button)findViewById(R.id.Button03);
+            WimaxButton = (Button)findViewById(R.id.WimaxButton);
             
-            Button03.setOnClickListener(new View.OnClickListener() {
+            WimaxButton.setOnClickListener(new View.OnClickListener() {
             	public void onClick(View v) {
             		TextView tv = (TextView) findViewById(R.id.FinalResults);
             		tracker.trackEvent("ButtonClicked", "WiMAXCheck", null, 0);
             		RootButton.setEnabled(false);
             		BusyboxButton.setEnabled(false);
-            		Button03.setEnabled(false);
+            		WimaxButton.setEnabled(false);
             		String busyboxResults = coretask.busyboxPresent();
             		if(busyboxResults == "error"){
             			tv.setTextColor(0xffff0000);
-           			 	Button03.setTextColor(0xffff0000);
+           			 	WimaxButton.setTextColor(0xffff0000);
             			tv.setText("Sorry, you don't have busybox installed correctly! \nFor proper Busybox installation, please search for the BusyBox app by Stericson in the market!");
             			showToast("Sorry, you don't have busybox installed correctly! \nFor proper Busybox installation, please search for the BusyBox app by Stericson in the market!");
             		}
@@ -160,7 +160,7 @@ public class WimaxKeys extends Activity {
             					else {
             						tracker.trackEvent("WiMAXCheck", "Not Compatible", null, 0);
             						tv.setTextColor(0xffff0000);
-            						Button03.setTextColor(0xffff0000);
+            						WimaxButton.setTextColor(0xffff0000);
             						tv.setText("Sorry, this phone does not identify itself as an HTC Evo or an HTC Shift!");
             						showToast("Sorry, this phone does not identify itself as an HTC Evo or an HTC Shift!");
             						}	
@@ -168,7 +168,7 @@ public class WimaxKeys extends Activity {
             			}
             		RootButton.setEnabled(true);
             		BusyboxButton.setEnabled(true);
-            		Button03.setEnabled(true);
+            		WimaxButton.setEnabled(true);
             		tracker.dispatch();
             	}
             });
@@ -303,7 +303,7 @@ public class WimaxKeys extends Activity {
  		   
     		if(mString.equals("error")){
     			tv.setTextColor(0xffff0000);
-   			 	Button03.setTextColor(0xffff0000);
+   			 	WimaxButton.setTextColor(0xffff0000);
    			 	tracker.trackEvent("WiMAXResults", "NoWiMAXPartition", null, 0);
     			tv.setText("No WiMAX partition present at /dev/mtd/mtd0 EVO or /dev/block/mmcblk0p25 Shift");
     			showToast("No WiMAX partition present at /dev/mtd/mtd0 EVO or /dev/block/mmcblk0p25 Shift");
@@ -311,14 +311,14 @@ public class WimaxKeys extends Activity {
     		if(mString.lastIndexOf("RSA PRIVATE KEY") == -1){
     				tracker.trackEvent("WiMAXResults", "RSAKeyMissing", null, 0);
         			tv.setTextColor(0xffff0000);
-       			 	Button03.setTextColor(0xffff0000);
+       			 	WimaxButton.setTextColor(0xffff0000);
     				tv.setText("Sorry, your WiMAX RSA key is missing!");
     				showToast("Sorry, your WiMAX RSA key is missing!");
     		}
     		else {
     			tracker.trackEvent("WiMAXResults", "RSAKeyPresent", null, 0);
     			tv.setTextColor(0xff00C900);
-   			 	Button03.setTextColor(0xff005500);
+   			 	WimaxButton.setTextColor(0xff005500);
     			tv.setText("Congratulations! Your RSA key is present!");
     			showToast("Congratulations! Your RSA key is present!");
     		}	
