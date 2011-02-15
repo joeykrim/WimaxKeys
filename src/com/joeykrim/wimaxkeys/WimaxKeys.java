@@ -26,7 +26,7 @@ import com.joeykrim.wimaxkeys.ShellCommand.CommandResult;
 
 public class WimaxKeys extends Activity {
 	
-   	private Button Button01;
+   	private Button RootButton;
    	private Button Button02;
    	private Button Button03;
    	private Button Button04;
@@ -66,33 +66,33 @@ public class WimaxKeys extends Activity {
         
         finalResults = (TextView) findViewById(R.id.FinalResults);
 
-        Button01 = (Button)findViewById(R.id.Button01);
+        RootButton = (Button)findViewById(R.id.RootButton);
         
-        Button01.setOnClickListener(new View.OnClickListener() {
+        RootButton.setOnClickListener(new View.OnClickListener() {
         	public void onClick(View v) {
         		TextView tv = (TextView) findViewById(R.id.FinalResults);
         		tracker.trackEvent("ButtonClicked", "RootCheck", null, 0);
-        		Button01.setEnabled(false);
+        		RootButton.setEnabled(false);
         		Button02.setEnabled(false);
         		Button03.setEnabled(false);
         		Boolean rootCheck = coretask.hasRootPermission();
         		if(rootCheck == true) {
         			tv.setTextColor(0xff00C900);
-       			 	Button01.setTextColor(0xff005500);
+       			 	RootButton.setTextColor(0xff005500);
         			tv.setText("Congratulations! You have root access!");
         			showToast("Congratulations! You have root access!");
         			/** changing background color adjusts button height affecting layout 
-        			 * Button01.setBackgroundColor(0xff00ff00); */
+        			 * RootButton.setBackgroundColor(0xff00ff00); */
         			tracker.trackEvent("RootResult", "Success", null, 0);
         			}
         			else {
             			tv.setTextColor(0xffff0000);
-           			 	Button01.setTextColor(0xffff0000);
+           			 	RootButton.setTextColor(0xffff0000);
         				tv.setText("Sorry, you don't have root access.");
                 		showToast("Sorry, you don't have root access.");
             			tracker.trackEvent("RootResult", "Fail", null, 0);
         			}
-        		Button01.setEnabled(true);
+        		RootButton.setEnabled(true);
         		Button02.setEnabled(true);
         		Button03.setEnabled(true);
         		tracker.dispatch();
@@ -105,7 +105,7 @@ public class WimaxKeys extends Activity {
             	public void onClick(View v) {
             		TextView tv = (TextView) findViewById(R.id.FinalResults);
             		tracker.trackEvent("ButtonClicked", "BusyboxCheck", null, 0);
-            		Button01.setEnabled(false);
+            		RootButton.setEnabled(false);
             		Button02.setEnabled(false);
             		Button03.setEnabled(false);
             		String busyboxResults = coretask.busyboxPresent();
@@ -123,7 +123,7 @@ public class WimaxKeys extends Activity {
             			tv.setText("Busybox is installed correctly!");
             			showToast("Busybox is installed correctly!");
             		}
-            		Button01.setEnabled(true);
+            		RootButton.setEnabled(true);
             		Button02.setEnabled(true);
             		Button03.setEnabled(true);
             		tracker.dispatch();
@@ -136,7 +136,7 @@ public class WimaxKeys extends Activity {
             	public void onClick(View v) {
             		TextView tv = (TextView) findViewById(R.id.FinalResults);
             		tracker.trackEvent("ButtonClicked", "WiMAXCheck", null, 0);
-            		Button01.setEnabled(false);
+            		RootButton.setEnabled(false);
             		Button02.setEnabled(false);
             		Button03.setEnabled(false);
             		String busyboxResults = coretask.busyboxPresent();
@@ -166,7 +166,7 @@ public class WimaxKeys extends Activity {
             						}	
             					}
             			}
-            		Button01.setEnabled(true);
+            		RootButton.setEnabled(true);
             		Button02.setEnabled(true);
             		Button03.setEnabled(true);
             		tracker.dispatch();
