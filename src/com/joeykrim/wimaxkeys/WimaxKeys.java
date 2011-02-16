@@ -54,7 +54,7 @@ public class WimaxKeys extends Activity {
         
         /** Thanks AntiSocial! 
          * http://developer.android.com/reference/android/os/Build.html */
-        tracker.trackEvent("LocalAppVersion", "2.0", null, 0);
+        tracker.trackEvent("LocalAppVersion", "2.2", null, 0);
         
         if (Build.MANUFACTURER != null) {tracker.trackEvent("SystemData", Build.MANUFACTURER, null, 0);} 
         if (Build.BRAND != null) {tracker.trackEvent("SystemData", Build.BRAND, null, 0);}
