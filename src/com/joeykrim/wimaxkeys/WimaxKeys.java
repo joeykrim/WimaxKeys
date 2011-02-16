@@ -139,33 +139,43 @@ public class WimaxKeys extends Activity {
             		Button01.setEnabled(false);
             		Button02.setEnabled(false);
             		Button03.setEnabled(false);
-            		String busyboxResults = coretask.busyboxPresent();
-            		if(busyboxResults == "error"){
-            			tv.setTextColor(0xffff0000);
-           			 	Button03.setTextColor(0xffff0000);
-            			tv.setText("Sorry, you don't have busybox installed correctly! \nFor proper Busybox installation, please search for the BusyBox app by Stericson in the market!");
-            			showToast("Sorry, you don't have busybox installed correctly! \nFor proper Busybox installation, please search for the BusyBox app by Stericson in the market!");
+            		Boolean rootCheck = coretask.hasRootPermission();
+            		if (rootCheck){
+            			String busyboxResults = coretask.busyboxPresent();
+            			if(busyboxResults == "error"){
+            				tv.setTextColor(0xffff0000);
+           			 		Button03.setTextColor(0xffff0000);
+           			 		tv.setText("Sorry, you don't have busybox installed correctly! \nFor proper Busybox installation, please search for the BusyBox app by Stericson in the market!");
+           			 		showToast("Sorry, you don't have busybox installed correctly! \nFor proper Busybox installation, please search for the BusyBox app by Stericson in the market!");
+            			}
+            			else {
+            				if (coretask.runShellCommand("su","stdout","busybox grep supersonic /system/build.prop").indexOf("supersonic") != -1) {
+            					wimaxPhone = "supersonic";
+            					tracker.trackEvent("WiMAXCheck", "EVO", null, 0);
+            					mTask = (MyTask) new MyTask().execute();
+            				}else {
+            					if (coretask.runShellCommand("su","stdout","busybox grep speedy /system/build.prop").indexOf("speedy") != -1) {
+            						wimaxPhone = "speedy";
+            						tracker.trackEvent("WiMAXCheck", "Shift", null, 0);
+            						mTask = (MyTask) new MyTask().execute();
+            					}
+            						else {
+            							tracker.trackEvent("WiMAXCheck", "Not Compatible", null, 0);
+            							tv.setTextColor(0xffff0000);
+            							Button03.setTextColor(0xffff0000);
+            							tv.setText("Sorry, this phone does not identify itself as an HTC Evo or an HTC Shift!");
+            							showToast("Sorry, this phone does not identify itself as an HTC Evo or an HTC Shift!");
+            							}	
+            						}
+            				}
             		}
             		else {
-            			if (coretask.runShellCommand("su","stdout","busybox grep supersonic /system/build.prop").indexOf("supersonic") != -1) {
-            				wimaxPhone = "supersonic";
-            				tracker.trackEvent("WiMAXCheck", "EVO", null, 0);
-            				mTask = (MyTask) new MyTask().execute();
-            			}else {
-            				if (coretask.runShellCommand("su","stdout","busybox grep speedy /system/build.prop").indexOf("speedy") != -1) {
-            					wimaxPhone = "speedy";
-            					tracker.trackEvent("WiMAXCheck", "Shift", null, 0);
-            					mTask = (MyTask) new MyTask().execute();
-            			}
-            					else {
-            						tracker.trackEvent("WiMAXCheck", "Not Compatible", null, 0);
-            						tv.setTextColor(0xffff0000);
-            						Button03.setTextColor(0xffff0000);
-            						tv.setText("Sorry, this phone does not identify itself as an HTC Evo or an HTC Shift!");
-            						showToast("Sorry, this phone does not identify itself as an HTC Evo or an HTC Shift!");
-            						}	
-            					}
-            			}
+            			tv.setTextColor(0xffff0000);
+           			 	Button01.setTextColor(0xffff0000);
+        				tv.setText("Sorry, you don't have root access.");
+                		showToast("Sorry, you don't have root access.");
+            			tracker.trackEvent("RootResult", "Fail", null, 0);
+            		}
             		Button01.setEnabled(true);
             		Button02.setEnabled(true);
             		Button03.setEnabled(true);
