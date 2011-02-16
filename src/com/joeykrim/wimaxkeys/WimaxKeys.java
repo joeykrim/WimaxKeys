@@ -408,19 +408,8 @@ public class WimaxKeys extends Activity {
        /** thanks LouZiffer */
         public class CoreTask {
         	
-        	/** public boolean chmod(String file, String mode) {
-        		if (runShellCommand("su","exit","chmod "+ mode + " " + file) == "0") {
-        			return true;
-        		}
-        		return false;
-        	}*/
-        	
         	public String busyboxPresent() {
         		return runShellCommand("sh","stdout","busybox");
-        	}
-        	
-        	public String wimaxRSAKeys() {
-        		return runShellCommand("su","stdout","busybox grep RSA /dev/mtd/mtd0");
         	}
         	
         	public boolean hasRootPermission() {
