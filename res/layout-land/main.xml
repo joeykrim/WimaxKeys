@@ -9,7 +9,7 @@
     android:scrollbars="vertical" 
     android:scrollbarStyle="outsideOverlay" 
     android:scrollbarAlwaysDrawVerticalTrack="true"
-    android:background="@drawable/backgroundport">
+    android:background="@drawable/backgroundland">
 <TextView android:layout_width="fill_parent" 
 	android:layout_height="wrap_content" 
 	android:text="WiMAX RSA Key Checker" 
