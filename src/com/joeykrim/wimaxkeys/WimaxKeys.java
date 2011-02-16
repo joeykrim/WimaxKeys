@@ -50,7 +50,7 @@ public class WimaxKeys extends Activity {
         setContentView(R.layout.main);
         
         tracker = GoogleAnalyticsTracker.getInstance();
-        tracker.start("UA-", this);
+        tracker.start("", this);
         
         /** Thanks AntiSocial! 
          * http://developer.android.com/reference/android/os/Build.html */
@@ -142,7 +142,7 @@ public class WimaxKeys extends Activity {
             		Boolean rootCheck = coretask.hasRootPermission();
             		if (rootCheck){
             			String busyboxResults = coretask.busyboxPresent();
-            			if(busyboxResults == "error"){
+            			if(busyboxResults == "error" || busyboxResults == null){
             				tv.setTextColor(0xffff0000);
            			 		Button03.setTextColor(0xffff0000);
            			 		tv.setText(getString(R.string.busyboxFail));
