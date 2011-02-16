@@ -12,15 +12,4 @@
     <string name="aboutMsg">All those mentioned in the credits have been extremely helpful! \nThanks for using my software! \n\n<a href="http://www.joeyconway.com">http://www.joeyconway.com</a></string>
     <string name="menuAboutOkay">Okay</string>
     <string name="versionInfo">Version 2.1</string>
-    
-    <string name="please_wait">Checking for the WiMAX RSA Key! This can take up to 45 seconds. Please be patient!</string>
-    
-    <string name="root_yes">Congratulations! You have root access!</string>
-    <string name="root_no">Sorry, you don't have root access.</string>
-    <string name="busybox_yes">Busybox is installed correctly!</string>
-    <string name="busybox_no">Sorry, you don't have busybox installed correctly! <br/>For proper Busybox installation, please search for the BusyBox app by Stericson in the market!</string>
-    <string name="not_evo">Sorry, this phone does not identify itself as an HTC Evo or an HTC Shift!</string>
-    <string name="wimax_no_part">No WiMAX partition present at /dev/mtd/mtd0 EVO or /dev/block/mmcblk0p25 Shift"</string>
-    <string name="wimax_no_key">Sorry, your WiMAX RSA key is missing!</string>
-    <string name="wimax_yes">Congratulations! Your RSA key is present!</string>
 </resources>
