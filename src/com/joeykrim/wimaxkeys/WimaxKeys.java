@@ -464,7 +464,7 @@ public class WimaxKeys extends Activity {
 				String pem = result.substring(27,result.length()-25);
 				try {
 					//Decode the PEM certificate to DER
-					ByteArrayInputStream der = new ByteArrayInputStream(Base64.decode(result));
+					ByteArrayInputStream der = new ByteArrayInputStream(Base64.decode(pem));
 					// Get the X509Certificate object from BouncyCastle
 					X509Certificate cert = (X509Certificate) CertificateFactory.getInstance("X.509", "BC").generateCertificate(der);
 					// Get the issuer's DN, and lowercase it
