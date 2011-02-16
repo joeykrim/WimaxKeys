@@ -21,9 +21,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import android.util.Base64;
-import android.util.Base64InputStream;
-import java.io.StringBufferInputStream;
+import java.io.ByteArrayInputStream;
 import java.security.cert.X509Certificate;
 import java.security.cert.CertificateFactory;
 import javax.security.auth.x500.X500Principal;
@@ -463,17 +461,21 @@ public class WimaxKeys extends Activity {
 				//skip the header/footer
 				//-----BEGIN CERTIFICATE-----
 				//-----END CERTIFICATE-----
-				result = result.substring(27,result.length()-25);
+				String pem = result.substring(27,result.length()-25);
 				try {
-					Base64InputStream pem = new Base64InputStream(new StringBufferInputStream(result) , Base64.DEFAULT);
-					X509Certificate cert = (X509Certificate) CertificateFactory.getInstance("X.509", "BC").generateCertificate(pem);
+					//Decode the PEM certificate to DER
+					ByteArrayInputStream der = new ByteArrayInputStream(Base64.decode(result));
+					// Get the X509Certificate object from BouncyCastle
+					X509Certificate cert = (X509Certificate) CertificateFactory.getInstance("X.509", "BC").generateCertificate(der);
+					// Get the issuer's DN, and lowercase it
 					String dn = cert.getSubjectX500Principal().getName("RFC2253").toLowerCase();
 				       
+				        // Get the MAC address of the wimax0 device
 					String mac = coretask.runShellCommand("sh", "stdout", "cat /sys/class/net/wimax0/address");
+					// The cert does not delimit the mac, so remove the :'s
 					mac = mac.toLowerCase().replaceAll(":","");
 					
-					
-					
+					//see if the DN has the MAC in it
 					if(dn.contains(mac)) 
 						return "match";
 					else
