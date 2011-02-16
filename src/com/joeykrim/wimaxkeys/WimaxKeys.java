@@ -79,16 +79,16 @@ public class WimaxKeys extends Activity {
                                 WimaxButton.setEnabled(false);
                                 Boolean rootCheck = coretask.hasRootPermission();
                                 if (rootCheck == true) {
-                                        tv.setTextColor(0xff00C900);
-                                        RootButton.setTextColor(0xff005500);
+                                        tv.setTextColor(getResources().getColor(R.color.success_text));
+                                        RootButton.setTextColor(getResources().getColor(R.color.success_button));
                                         tv.setText(getString(R.string.rootSuccess));
                                         showToast(getString(R.string.rootSuccess));
                     /** changing background color adjusts button height affecting layout
                      * RootButton.setBackgroundColor(0xff00ff00); */ 
                                         tracker.trackEvent("RootResult", "Success", null, 0);
                                 } else {
-                                        tv.setTextColor(0xffff0000);
-                                        RootButton.setTextColor(0xffff0000);
+                                        tv.setTextColor(getResources().getColor(R.color.fail_text));
+                                        RootButton.setTextColor(getResources().getColor(R.color.fail_button));
                                         tv.setText(getString(R.string.rootFail));
                                         showToast(getString(R.string.rootFail));
                                         tracker.trackEvent("RootResult", "Fail", null, 0);
@@ -112,14 +112,14 @@ public class WimaxKeys extends Activity {
                                 String busyboxResults = coretask.busyboxPresent();
                                 if (busyboxResults == "error") {
                                         tracker.trackEvent("BusyboxResult", "Fail", null, 0);
-                                        tv.setTextColor(0xffff0000);
-                                        BusyboxButton.setTextColor(0xffff0000);
+                                        tv.setTextColor(getResources().getColor(R.color.fail_text));
+                                        BusyboxButton.setTextColor(getResources().getColor(R.color.fail_button));
                                         tv.setText(getString(R.string.busyboxFail));
                                         showToast(getString(R.string.busyboxFail));
                                 } else {
                                         tracker.trackEvent("BusyboxResult", "Success", null, 0);
-                                        tv.setTextColor(0xff00C900);
-                                        BusyboxButton.setTextColor(0xff005500);
+                                        tv.setTextColor(getResources().getColor(R.color.success_text));
+                                        BusyboxButton.setTextColor(getResources().getColor(R.color.success_button));
                                         tv.setText(getString(R.string.busyboxSuccess));
                                         showToast(getString(R.string.busyboxSuccess));
                                 }
@@ -141,8 +141,8 @@ public class WimaxKeys extends Activity {
                                 WimaxButton.setEnabled(false);
                                 String busyboxResults = coretask.busyboxPresent();
                                 if (busyboxResults == "error") {
-                                        tv.setTextColor(0xffff0000);
-                                        WimaxButton.setTextColor(0xffff0000);
+                                        tv.setTextColor(getResources().getColor(R.color.fail_text));
+                                        WimaxButton.setTextColor(getResources().getColor(R.color.fail_button));
                                         tv.setText(getString(R.string.busyboxFail));
                                         showToast(getString(R.string.busyboxFail));
                                 } else {
@@ -157,8 +157,8 @@ public class WimaxKeys extends Activity {
                                                         mTask = (MyTask) new MyTask().execute();
                                                 } else {
                                                         tracker.trackEvent("WiMAXCheck", "Not Compatible", null, 0);
-                                                        tv.setTextColor(0xffff0000);
-                                                        WimaxButton.setTextColor(0xffff0000);
+                                                        tv.setTextColor(getResources().getColor(R.color.fail_text));
+                                                        WimaxButton.setTextColor(getResources().getColor(R.color.fail_button));
                                                         tv.setText(getString(R.string.notCompatible));
                                                         showToast(getString(R.string.notCompatible));
                                                 } 
@@ -306,22 +306,22 @@ public class WimaxKeys extends Activity {
                 TextView tv = (TextView) findViewById(R.id.FinalResults);
  
                 if (mString.equals("error")) {
-                        tv.setTextColor(0xffff0000);
-                        WimaxButton.setTextColor(0xffff0000);
+                        tv.setTextColor(getResources().getColor(R.color.fail_text));
+                        WimaxButton.setTextColor(getResources().getColor(R.color.fail_button));
                         tracker.trackEvent("WiMAXResults", "NoWiMAXPartition", null, 0);
                         tv.setText(getString(R.string.noWiMAXPartition));
                         showToast(getString(R.string.noWiMAXPartition));
                 }
                 if (mString.lastIndexOf("RSA PRIVATE KEY") == - 1) {
                         tracker.trackEvent("WiMAXResults", "RSAKeyMissing", null, 0);
-                        tv.setTextColor(0xffff0000);
-                        WimaxButton.setTextColor(0xffff0000);
+                        tv.setTextColor(getResources().getColor(R.color.fail_text));
+                        WimaxButton.setTextColor(getResources().getColor(R.color.fail_button));
                         tv.setText(getString(R.string.WiMAXKeyMissing));
                         showToast(getString(R.string.WiMAXKeyMissing));
                 } else {
                         tracker.trackEvent("WiMAXResults", "RSAKeyPresent", null, 0);
-                        tv.setTextColor(0xff00C900);
-                        WimaxButton.setTextColor(0xff005500);
+                        tv.setTextColor(getResources().getColor(R.color.success_text));
+                        WimaxButton.setTextColor(getResources().getColor(R.color.success_button));
                         tv.setText(getString(R.string.WiMAXKeyPresent));
                         showToast(getString(R.string.WiMAXKeyPresent));
                 } 
