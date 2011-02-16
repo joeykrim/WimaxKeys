@@ -52,6 +52,11 @@
 	android:layout_width="wrap_content" 
 	android:layout_height="wrap_content"
 	android:layout_gravity="center"></Button>
+<Button android:text="Match WiMAX RSA Key"
+	android:id="@+id/wimaxVerifyButton" 
+	android:layout_width="wrap_content" 
+	android:layout_height="wrap_content"
+	android:layout_gravity="center"></Button>
 <TextView android:text=" " 
 	android:id="@+id/Spacer3" 
 	android:layout_width="fill_parent" 

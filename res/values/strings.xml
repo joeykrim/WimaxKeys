@@ -18,8 +18,11 @@
     <string name="busyboxFail">Sorry, you do not have Busybox installed correctly! \nFor proper Busybox installation, please search for the BusyBox app by Stericson in the market!</string>
     <string name="notCompatible">Sorry, this phone does not identify itself as an HTC EVO or an HTC Shift!</string>
     <string name="noWiMAXPartition">No WiMAX partition present at /dev/mtd/mtd0 for the EVO or /dev/block/mmcblk0p25 for the Shift</string>
+    <string name="noWiMAXVerify">Your WiMAX key could not be verified. 4G must be enabled to verify (need not be connected, however)</string>
     <string name="WiMAXKeyMissing">Sorry, your WiMAX RSA key is missing!</string>
     <string name="WiMAXKeyPresent">Congratulations! Your RSA key is present!</string>
+    <string name="WiMAXKeyMatch">Congratulations! Your RSA key matches your hardware!</string>
+    <string name="WiMAXKeyNoMatch">Your key is present, does not match your hardware. This might be a problem.</string>
     <string name="WiMAXKeyCheckMsg">Checking for the WiMAX RSA Key! This can take up to 45 seconds. Please be patient!</string>
     <string name="Warning">Due to the large size of the WiMAX partition, the key checking process can take up to 45 seconds.</string>
 </resources>
