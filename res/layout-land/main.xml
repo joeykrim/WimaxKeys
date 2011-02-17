@@ -42,11 +42,6 @@
 	android:layout_width="wrap_content" 
 	android:layout_height="wrap_content"
 	android:layout_gravity="center"></Button>
-<Button android:text="@string/verifyBusybox" 
-	android:id="@+id/busyboxButton"
-	android:layout_height="wrap_content"
-	android:layout_width="wrap_content"
-	android:layout_gravity="center"></Button>
 <Button android:text="@string/verifyWimaxRSA"
 	android:id="@+id/wimaxButton" 
 	android:layout_width="wrap_content" 

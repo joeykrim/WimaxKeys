@@ -21,13 +21,19 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.ByteArrayInputStream;
+import android.util.Log;
+import java.io.File;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
-import com.joeykrim.wimaxkeys.ShellCommand.CommandResult;
 
 public class WimaxKeys extends Activity {
  
         private Button rootButton;
-        private Button busyboxButton;
         private Button wimaxButton;
         private Button authorButton;
         private TextView finalResults;
@@ -39,11 +45,9 @@ public class WimaxKeys extends Activity {
 
         GoogleAnalyticsTracker tracker;
 
-
-        CoreTask coretask = new CoreTask();
         AsyncTask mTask = null;
 
-    /** Called when the activity is first created. */
+    	/** Called when the activity is first created. */
         @Override
         public void onCreate(Bundle savedInstanceState) {
                 super.onCreate(savedInstanceState);
@@ -52,8 +56,8 @@ public class WimaxKeys extends Activity {
                 tracker = GoogleAnalyticsTracker.getInstance();
                 tracker.start("", this);
  
-        /** Thanks AntiSocial!
-         * http://developer.android.com/reference/android/os/Build.html */ 
+		/** Thanks AntiSocial!
+		 * http://developer.android.com/reference/android/os/Build.html */ 
                 tracker.trackEvent("LocalAppVersion", "2.2", null, 0);
  
                 if (Build.MANUFACTURER != null) { tracker.trackEvent("SystemData", Build.MANUFACTURER, null, 0); } 
@@ -72,14 +76,12 @@ public class WimaxKeys extends Activity {
                         public void onClick(View v) {
                                 tracker.trackEvent("ButtonClicked", "RootCheck", null, 0);
                                 disableButtons();
-                                Boolean rootCheck = coretask.hasRootPermission();
+                                boolean rootCheck = canSU();
                                 if (rootCheck == true) {
                                         finalResults.setTextColor(getResources().getColor(R.color.success_text));
                                         rootButton.setTextColor(getResources().getColor(R.color.success_button));
                                         finalResults.setText(getString(R.string.rootSuccess));
                                         showToast(getString(R.string.rootSuccess));
-                    /** changing background color adjusts button height affecting layout
-                     * rootButton.setBackgroundColor(0xff00ff00); */ 
                                         tracker.trackEvent("RootResult", "Success", null, 0);
                                 } else {
                                         finalResults.setTextColor(getResources().getColor(R.color.fail_text));
@@ -93,65 +95,30 @@ public class WimaxKeys extends Activity {
                         }
                 } );
  
-                busyboxButton = (Button) findViewById(R.id.busyboxButton);
- 
-                busyboxButton.setOnClickListener(new View.OnClickListener() {
-                        public void onClick(View v) {
-                                tracker.trackEvent("ButtonClicked", "BusyboxCheck", null, 0);
-                                disableButtons();
-                                String busyboxResults = coretask.busyboxPresent();
-                                if (busyboxResults == "error") {
-                                        tracker.trackEvent("BusyboxResult", "Fail", null, 0);
-                                        finalResults.setTextColor(getResources().getColor(R.color.fail_text));
-                                        busyboxButton.setTextColor(getResources().getColor(R.color.fail_button));
-                                        finalResults.setText(getString(R.string.busyboxFail));
-                                        showToast(getString(R.string.busyboxFail));
-                                } else {
-                                        tracker.trackEvent("BusyboxResult", "Success", null, 0);
-                                        finalResults.setTextColor(getResources().getColor(R.color.success_text));
-                                        busyboxButton.setTextColor(getResources().getColor(R.color.success_button));
-                                        finalResults.setText(getString(R.string.busyboxSuccess));
-                                        showToast(getString(R.string.busyboxSuccess));
-                                }
-                                enableButtons();
-                                tracker.dispatch();
-                        }
-                } );
- 
                 wimaxButton = (Button) findViewById(R.id.wimaxButton);
  
                 wimaxButton.setOnClickListener(new View.OnClickListener() {
                         public void onClick(View v) {
                                 tracker.trackEvent("ButtonClicked", "WiMAXCheck", null, 0);
                                 disableButtons();
-                                String busyboxResults = coretask.busyboxPresent();
-                                if (busyboxResults == "error") {
-                                        finalResults.setTextColor(getResources().getColor(R.color.fail_text));
-                                        wimaxButton.setTextColor(getResources().getColor(R.color.fail_button));
-                                        finalResults.setText(getString(R.string.busyboxFail));
-                                        showToast(getString(R.string.busyboxFail));
-                                        enableButtons();
-                                } else {
-                                        if (coretask.runShellCommand("su", "stdout", "busybox grep supersonic /system/build.prop").indexOf("supersonic") != - 1) {
-                                                wimaxPhone = "supersonic";
-                                                tracker.trackEvent("WiMAXCheck", "EVO", null, 0);
-                                                mTask = new WiMaxCheckTask().execute();
-                                        } else {
-                                                if (coretask.runShellCommand("su", "stdout", "busybox grep speedy /system/build.prop").indexOf("speedy") != - 1) {
-                                                        wimaxPhone = "speedy";
-                                                        tracker.trackEvent("WiMAXCheck", "Shift", null, 0);
-                                                        mTask = new WiMaxCheckTask().execute();
-                                                } else {
-                                                        tracker.trackEvent("WiMAXCheck", "Not Compatible", null, 0);
-                                                        finalResults.setTextColor(getResources().getColor(R.color.fail_text));
-                                                        wimaxButton.setTextColor(getResources().getColor(R.color.fail_button));
-                                                        finalResults.setText(getString(R.string.notCompatible));
-                                                        showToast(getString(R.string.notCompatible));
-                                                        enableButtons();
-                                                } 
-                                        }
+                                setWimaxPhone();
+                                if("supersonic".equals(wimaxPhone)) {
+	                                tracker.trackEvent("WiMAXCheck", "EVO", null, 0);
+	                                tracker.dispatch();
+	                        } else if("speedy".equals(wimaxPhone)) {
+	                        	tracker.trackEvent("WiMAXCheck", "Shift", null, 0);
+	                        	tracker.dispatch();
+	                        } else {
+	                        	tracker.trackEvent("WiMAXCheck", "Not Compatible", null, 0);
+					finalResults.setTextColor(getResources().getColor(R.color.fail_text));
+					wimaxButton.setTextColor(getResources().getColor(R.color.fail_button));
+					finalResults.setText(getString(R.string.notCompatible));
+					showToast(getString(R.string.notCompatible));
+					enableButtons();
+					tracker.dispatch();
+					return;
                                 }
-                                tracker.dispatch();
+                                mTask = new WiMaxCheckTask().execute();
                         }
                 } );
  
@@ -180,13 +147,11 @@ public class WimaxKeys extends Activity {
  
  	private void disableButtons() {
  		rootButton.setEnabled(false);
-		busyboxButton.setEnabled(false);
 		wimaxButton.setEnabled(false);
  	}
  	
  	private void enableButtons() {
 	 	rootButton.setEnabled(true);
-		busyboxButton.setEnabled(true);
 		wimaxButton.setEnabled(true);
  	}
  
@@ -198,6 +163,7 @@ public class WimaxKeys extends Activity {
                 inflater.inflate(R.menu.options, menu);
                 return true;
         }
+ 
  
  
         @Override
@@ -286,29 +252,86 @@ public class WimaxKeys extends Activity {
                         finalResults.setText(finalResultsText);
                 }
         }
+        
+        private void setWimaxPhone() {
+        	if(wimaxPhone != null)
+        		return;
+		//grep supersonic /system/build.prop
+		try {
+			File file = new File("/system/build.prop");
+			BufferedReader data = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+			String line = data.readLine();
+			while(line != null) {
+				if(line.contains("supersonic")) {
+					wimaxPhone = "supersonic";
+					return;
+				} else if(line.contains("speedy")) {
+					wimaxPhone = "speedy";
+					return;
+				}
+				line = data.readLine();
+			}
+		} catch (Exception e) {
+			wimaxPhone = null;
+		}
+		wimaxPhone = null;
+        }
+        
+        private boolean canSU() {
+        	Process process = null;
+        	int exitValue = -1;
+		try {
+			process = Runtime.getRuntime().exec("su");
+			DataOutputStream toProcess = new DataOutputStream(process.getOutputStream());
+			toProcess.writeBytes("exec id\n");
+			toProcess.flush();
+			exitValue = process.waitFor();
+		} catch (Exception e) {
+			exitValue = -1;
+		}
+		return exitValue == 0;
+	}					
+			
+        	
+        
+        private Process catRange(String device, int start, int count) {
+		Process process = null;
+		String cmd = String.format("exec dd if=%s bs=4096 skip=%d count=%d\n", device, start, count);
+		try {
+			process = Runtime.getRuntime().exec("su");
+			DataOutputStream toProcess = new DataOutputStream(process.getOutputStream());
+			toProcess.writeBytes(cmd);
+			toProcess.flush();
+		
+		} catch(Exception e) {
+			Log.e("WimaxKeyCheck", "Exception while trying to run: '" + cmd + "' " + e.getMessage());
+			process = null;
+		}
+		return process;
+	}
  
     /** thanks birbeck */
         private void parseCheckResult(String result) {
         /** EditText text = (EditText)findViewById(R.id.FinalResults); */
  
-                if ("error".equals(result)) {
+ 		if("found".equals(result)) {
+ 			tracker.trackEvent("WiMAXResults", "RSAKeyPresent", null, 0);
+                        finalResults.setTextColor(getResources().getColor(R.color.success_text));
+                        wimaxButton.setTextColor(getResources().getColor(R.color.success_button));
+                        finalResults.setText(getString(R.string.WiMAXKeyPresent));
+                        showToast(getString(R.string.WiMAXKeyPresent));
+ 		} else if("not found".equals(result)) {
+ 			tracker.trackEvent("WiMAXResults", "RSAKeyMissing", null, 0);
+                        finalResults.setTextColor(getResources().getColor(R.color.fail_text));
+                        wimaxButton.setTextColor(getResources().getColor(R.color.fail_button));
+                        finalResults.setText(getString(R.string.WiMAXKeyMissing));
+                        showToast(getString(R.string.WiMAXKeyMissing));
+ 		} else {
                         finalResults.setTextColor(getResources().getColor(R.color.fail_text));
                         wimaxButton.setTextColor(getResources().getColor(R.color.fail_button));
                         tracker.trackEvent("WiMAXResults", "NoWiMAXPartition", null, 0);
                         finalResults.setText(getString(R.string.noWiMAXPartition));
                         showToast(getString(R.string.noWiMAXPartition));
-                } else if (result != null && result.lastIndexOf("RSA PRIVATE KEY") == -1) {
-                        tracker.trackEvent("WiMAXResults", "RSAKeyMissing", null, 0);
-                        finalResults.setTextColor(getResources().getColor(R.color.fail_text));
-                        wimaxButton.setTextColor(getResources().getColor(R.color.fail_button));
-                        finalResults.setText(getString(R.string.WiMAXKeyMissing));
-                        showToast(getString(R.string.WiMAXKeyMissing));
-                } else {
-                        tracker.trackEvent("WiMAXResults", "RSAKeyPresent", null, 0);
-                        finalResults.setTextColor(getResources().getColor(R.color.success_text));
-                        wimaxButton.setTextColor(getResources().getColor(R.color.success_button));
-                        finalResults.setText(getString(R.string.WiMAXKeyPresent));
-                        showToast(getString(R.string.WiMAXKeyPresent));
                 } 
 		enableButtons();
                 tracker.dispatch();
@@ -336,7 +359,7 @@ public class WimaxKeys extends Activity {
                 tracker.dispatch();
         }
  
-        
+
     /** thanks birbeck */
         class WiMaxCheckTask extends AsyncTask<Void, Void, String> {
  
@@ -351,23 +374,62 @@ public class WimaxKeys extends Activity {
  
                 @Override
                 protected String doInBackground(Void... params) {
-            /** String result = null; */
- 
- 
-            /** try {
-             * Thread.sleep(3000);
-             * result = "Finished";
-             * } catch (InterruptedException e) {
-             * e.printStackTrace();
-             * } */ 
-            /** return result; */
- 
-            /** coretask.hasRootPermissions(); */
- 
-                        if ("supersonic".equals(wimaxPhone)) {
-                                return coretask.runShellCommand("su", "stdout", "busybox grep RSA /dev/mtd/mtd0"); 
-                        } else if ("speedy".equals(wimaxPhone)) {
-                                return coretask.runShellCommand("su", "stdout", "busybox grep RSA /dev/block/mmcblk0p25");
+         	   if (wimaxPhone != null) {
+ 				Process process = null;
+ 				String device = null;
+ 				int count = 100;
+ 				int start = 2100 - count; //3071 is the end of the file
+ 				
+ 				if (wimaxPhone.equals("supersonic")) {
+					device = "/dev/mtd/mtd0ro";
+				} else if(wimaxPhone.equals("speedy")) {
+					device = "/dev/block/mmcblk0p25";
+				}
+				try {
+					while (start > 0) {
+						process = catRange(device, start, count);
+						if(process == null) {
+							return "error";
+						}
+						BufferedReader data = new BufferedReader(new InputStreamReader(process.getInputStream()));
+						String line = data.readLine();
+						boolean foundStart = false;
+						boolean foundEnd = false;
+						while (line != null) {
+							if(line.contains("-----BEGIN RSA PRIVATE KEY-----")) {
+								foundStart = true;
+							}
+							if(line.contains("-----END RSA PRIVATE KEY-----")) {
+								foundEnd = true;
+								break;
+							}
+							
+							line = data.readLine();
+						}
+						if(foundStart || foundEnd) {
+							//our window size cut it off?
+							
+							if(foundStart && !foundEnd) {
+								//shouldnt be more than a few blocks
+								count = count++;
+								continue;
+							} else if(!foundStart && foundEnd) {
+								start = start--;
+								continue;
+							} else {
+								return "found";
+							}
+						}
+						
+						start = start - count;
+					}
+					// never found it
+					return "not found";
+				} catch (Exception e) {
+					Log.d("WimaxKeyCheck","error",e);
+					//TODO
+				}
+	                                
                         }
                         return "error";
                 }
@@ -387,86 +449,4 @@ public class WimaxKeys extends Activity {
                         mTask = null;
                 }
         }
- 
-        
-    /** thanks LouZiffer */
-        public class CoreTask {
- 
-                public String busyboxPresent() {
-                        return runShellCommand("sh", "stdout", "busybox");
-                }
- 
-                public boolean hasRootPermission() {
-                        boolean rooted = true;
-                        try {
-                                ShellCommand cmd = new ShellCommand();
-                                if (! cmd.canSU()) {
-                                        rooted = false;
-                                }
-
-                        } catch (Exception e) {
-                /** if (debug.exists()) Log.d(MSG_TAG, "Can't obtain root - Here is what I know: "+e.getMessage());
-                 * rooted = false; */ 
-                        }
-                        return rooted;
-                }
- 
-        /**
-         * Runs shell commands as sh or su.
-         *
-         * @param UserType - sh or su
-         * @param OutputType - exit, stdout, or stderr
-         * @param Command - properly formed shell command
-         * @return Output
-         * thanks LouZiffer
-         */ 
-                public String runShellCommand(String UserType, String OutputType, String Command) {
-                        String Output = "";
- 
-                        if (UserType == "su") {
-                                ShellCommand cmd = new ShellCommand();
-                                CommandResult r = cmd.su.runWaitFor(Command);
-                                if (! r.success()) {
-                    /** if (debug.exists()) Log.d(MSG_TAG, "Error " + r.stderr); */
- 
-                                } else {
-                    /** if (debug.exists()) Log.d(MSG_TAG, "Successfully executed command " + Command + " Result is: "+ r.stdout); */
- 
-                                        if (OutputType == "stdout") {
-                                                Output = r.stdout;
-                                        }
-                                        if (OutputType == "stderr") {
-                                                Output = r.stderr;
-                                        }
-                                        if (OutputType == "exit") {
-                                                Output = Integer.toString(r.exit_value);
-                                        }
-                                }
-                        } else {
-                                ShellCommand cmd = new ShellCommand();
-                                CommandResult r = cmd.sh.runWaitFor(Command);
-                                if (! r.success()) {
-                    /** if (debug.exists()) Log.d(MSG_TAG, "Error " + r.stderr); */
- 
-                    /** i added output string error */
- 
-                                        Output = "error";
-                                } else {
-                    /** if (debug.exists()) Log.d(MSG_TAG, "Successfully executed command " + Command + " Result is: " + r.stdout); */
- 
-                                        if (OutputType == "stdout") {
-                                                Output = r.stdout;
-                                        }
-                                        if (OutputType == "stderr") {
-                                                Output = r.stderr;
-                                        }
-                                        if (OutputType == "exit") {
-                                                Output = Integer.toString(r.exit_value);
-                                        }
-                                }
-                        }
-                        return Output;
-                }
-        }
- 
 }
