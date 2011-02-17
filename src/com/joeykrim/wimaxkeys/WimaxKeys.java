@@ -51,8 +51,6 @@ public class WimaxKeys extends Activity {
         AsyncTask mTask = null;
 
     /** Called when the activity is first created. */
- 
- 
         @Override
         public void onCreate(Bundle savedInstanceState) {
                 super.onCreate(savedInstanceState);
@@ -205,7 +203,6 @@ public class WimaxKeys extends Activity {
                 authorButton = (Button) findViewById(R.id.authorButton);
  
         /** thanks AntiSociaL */
- 
                 authorButton.setOnClickListener(new View.OnClickListener() {
                         public void onClick(View v) {
                                 tracker.trackEvent("ButtonClicked", "AuthorWebSite", null, 0);
@@ -219,9 +216,7 @@ public class WimaxKeys extends Activity {
                 } );
                 TextView credits = (TextView) findViewById(R.id.Credits);
                 credits.setMovementMethod(LinkMovementMethod.getInstance());
- 
         /** http://developer.android.com/guide/topics/data/data-storage.html#pref */
- 
                 SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
                 disAccepted = settings.getBoolean("disclaimerAccepted", false);
                 if (! disAccepted) { showDialog(DIALOG_DISCLAIMER_ID); }
@@ -242,9 +237,8 @@ public class WimaxKeys extends Activity {
 		wimaxVerifyButton.setEnabled(true);
  	}
  
+ 	
     /** http://developer.android.com/guide/topics/ui/menus.html */
- 
- 
         @Override
         public boolean onCreateOptionsMenu(Menu menu) {
                 MenuInflater inflater = getMenuInflater();
@@ -277,9 +271,8 @@ public class WimaxKeys extends Activity {
                 }
         }
  
+        
     /** http://www.monkeycancode.com/android-show-a-legal-agreement-dialog-before-program-launches */
- 
- 
         @Override
         protected Dialog onCreateDialog(int id) {
                 Dialog dialog;
@@ -324,17 +317,14 @@ public class WimaxKeys extends Activity {
  
  
     /** thanks slushpupie */
- 
- 
         @Override
         public void onSaveInstanceState(Bundle savedInstanceState) {
                 super.onSaveInstanceState(savedInstanceState);
                 savedInstanceState.putString("finalResults", finalResults.getText().toString());
         }
  
+        
     /** thanks slushpupie */
- 
- 
         @Override
         public void onRestoreInstanceState(Bundle savedInstanceState) {
                 super.onRestoreInstanceState(savedInstanceState);
@@ -345,10 +335,8 @@ public class WimaxKeys extends Activity {
         }
  
     /** thanks birbeck */
- 
         private void parseCheckResult(String result) {
         /** EditText text = (EditText)findViewById(R.id.FinalResults); */
- 
  
                 if ("error".equals(result)) {
                         finalResults.setTextColor(getResources().getColor(R.color.fail_text));
@@ -398,8 +386,8 @@ public class WimaxKeys extends Activity {
                 enableButtons();
         }
  
+        
     /** setGravity adjustments - http://3.ly/sP6b */
- 
         public void showToast(String toast) {
         /** Toast.makeText(WimaxKeys.this, toast, Toast.LENGTH_SHORT).show(); */
  
@@ -409,9 +397,8 @@ public class WimaxKeys extends Activity {
                 return;
         }
  
+        
     /** thanks birbeck */
- 
- 
         @Override
         public void onDestroy() {
                 super.onDestroy();
@@ -494,11 +481,9 @@ public class WimaxKeys extends Activity {
         }
  
     /** thanks birbeck */
- 
         class WiMaxCheckTask extends AsyncTask<Void, Void, String> {
  
                 ProgressDialog mDialog = new ProgressDialog(WimaxKeys.this);
- 
  
                 @Override
                 protected void onPreExecute() {
@@ -506,7 +491,6 @@ public class WimaxKeys extends Activity {
                         mDialog.setCancelable(false);
                         mDialog.show();
                 }
- 
  
                 @Override
                 protected String doInBackground(Void... params) {
@@ -547,8 +531,8 @@ public class WimaxKeys extends Activity {
                 }
         }
  
+        
     /** thanks LouZiffer */
- 
         public class CoreTask {
  
                 public String busyboxPresent() {

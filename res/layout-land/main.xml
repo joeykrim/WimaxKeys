@@ -12,7 +12,7 @@
     android:background="@drawable/backgroundland">
 <TextView android:layout_width="fill_parent" 
 	android:layout_height="wrap_content" 
-	android:text="WiMAX RSA Key Checker" 
+	android:text="@string/app_name" 
 	android:id="@+id/Welcome1"
 	android:textSize="26sp"
 	android:gravity="center"></TextView>
@@ -23,12 +23,12 @@
 	android:textSize="10sp"></TextView>
 <TextView android:layout_width="wrap_content" 
 	android:layout_height="wrap_content" 
-	android:text="Warning" 
+	android:text="@string/warning" 
 	android:id="@+id/Warning"
 	android:textSize="18sp"></TextView>
 <TextView android:layout_width="wrap_content" 
 	android:layout_height="wrap_content" 
-	android:text="@string/Warning" 
+	android:text="@string/warningMsg" 
 	android:id="@+id/WarningMsg"
 	android:textSize="14sp"></TextView>
 <View android:layout_width="fill_parent"
@@ -37,17 +37,17 @@
 	android:id="@+id/Spacer2" 
 	android:layout_width="wrap_content" 
 	android:layout_height="wrap_content"></TextView>
-<Button android:text="Verify Root Access"
+<Button android:text="@string/verifyRoot"
 	android:id="@+id/rootButton" 
 	android:layout_width="wrap_content" 
 	android:layout_height="wrap_content"
 	android:layout_gravity="center"></Button>
-<Button android:text="Verify Busybox Installed" 
+<Button android:text="@string/verifyBusybox" 
 	android:id="@+id/busyboxButton"
 	android:layout_height="wrap_content"
 	android:layout_width="wrap_content"
 	android:layout_gravity="center"></Button>
-<Button android:text="Verify WiMAX RSA Key"
+<Button android:text="@string/verifyWimaxRSA"
 	android:id="@+id/wimaxButton" 
 	android:layout_width="wrap_content" 
 	android:layout_height="wrap_content"
@@ -63,7 +63,7 @@
 	android:layout_height="wrap_content"
 	android:textSize="4sp"
 	android:layout_gravity="center"></TextView>
-<TextView android:text="Results: " 
+<TextView android:text="@string/results" 
 	android:id="@+id/Results" 
 	android:layout_width="wrap_content" 
 	android:layout_height="wrap_content"
@@ -84,12 +84,12 @@
 	android:layout_gravity="center"></TextView>
 <View android:layout_width="fill_parent"
     android:layout_height="2dip" android:background="#FFFFFFFF" />
-<TextView android:text="by joeykrim"
+<TextView android:text="@string/authorName"
 	android:id="@+id/joeykrim" 
 	android:layout_width="wrap_content" 
 	android:layout_height="wrap_content"
 	android:textColor="#ffffffff"></TextView>	
-<Button android:text="Author Web Site" 
+<Button android:text="@string/authorWebSite" 
 	android:id="@+id/authorButton" 
 	android:layout_width="wrap_content" 
 	android:layout_height="wrap_content"></Button>
@@ -102,6 +102,6 @@
 	android:id="@+id/Credits" 
 	android:layout_width="wrap_content" 
 	android:layout_height="wrap_content"
-	android:textColor="#ff000000"></TextView>
+	android:textColor="#ffffffff"></TextView>
 </LinearLayout>
 </ScrollView>
