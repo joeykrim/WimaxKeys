@@ -41,7 +41,7 @@ public class WimaxKeys extends Activity {
 
 
         CoreTask coretask = new CoreTask();
-        MyTask mTask = null;
+        AsyncTask mTask = null;
 
     /** Called when the activity is first created. */
  
@@ -146,12 +146,12 @@ public class WimaxKeys extends Activity {
                                         if (coretask.runShellCommand("su", "stdout", "busybox grep supersonic /system/build.prop").indexOf("supersonic") != - 1) {
                                                 wimaxPhone = "supersonic";
                                                 tracker.trackEvent("WiMAXCheck", "EVO", null, 0);
-                                                mTask = (MyTask) new MyTask().execute();
+                                                mTask = new WiMaxCheckTask().execute();
                                         } else {
                                                 if (coretask.runShellCommand("su", "stdout", "busybox grep speedy /system/build.prop").indexOf("speedy") != - 1) {
                                                         wimaxPhone = "speedy";
                                                         tracker.trackEvent("WiMAXCheck", "Shift", null, 0);
-                                                        mTask = (MyTask) new MyTask().execute();
+                                                        mTask = new WiMaxCheckTask().execute();
                                                 } else {
                                                         tracker.trackEvent("WiMAXCheck", "Not Compatible", null, 0);
                                                         finalResults.setTextColor(getResources().getColor(R.color.fail_text));
@@ -349,7 +349,7 @@ public class WimaxKeys extends Activity {
  
     /** thanks birbeck */
  
-        class MyTask extends AsyncTask<Void, Void, String> {
+        class WiMaxCheckTask extends AsyncTask<Void, Void, String> {
  
                 ProgressDialog mDialog = new ProgressDialog(WimaxKeys.this);
  
