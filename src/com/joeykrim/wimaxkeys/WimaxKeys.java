@@ -41,7 +41,7 @@ public class WimaxKeys extends Activity {
 
 
         CoreTask coretask = new CoreTask();
-        MyTask mTask = null;
+        AsyncTask mTask = null;
 
     /** Called when the activity is first created. */
  
@@ -73,9 +73,7 @@ public class WimaxKeys extends Activity {
                 rootButton.setOnClickListener(new View.OnClickListener() {
                         public void onClick(View v) {
                                 tracker.trackEvent("ButtonClicked", "RootCheck", null, 0);
-                                rootButton.setEnabled(false);
-                                busyboxButton.setEnabled(false);
-                                wimaxButton.setEnabled(false);
+                                disableButtons();
                                 Boolean rootCheck = coretask.hasRootPermission();
                                 if (rootCheck == true) {
                                         finalResults.setTextColor(getResources().getColor(R.color.success_text));
@@ -92,9 +90,7 @@ public class WimaxKeys extends Activity {
                                         showToast(getString(R.string.rootFail));
                                         tracker.trackEvent("RootResult", "Fail", null, 0);
                                 }
-                                rootButton.setEnabled(true);
-                                busyboxButton.setEnabled(true);
-                                wimaxButton.setEnabled(true);
+                                enableButtons();
                                 tracker.dispatch();
                         }
                 } );
@@ -104,9 +100,7 @@ public class WimaxKeys extends Activity {
                 busyboxButton.setOnClickListener(new View.OnClickListener() {
                         public void onClick(View v) {
                                 tracker.trackEvent("ButtonClicked", "BusyboxCheck", null, 0);
-                                rootButton.setEnabled(false);
-                                busyboxButton.setEnabled(false);
-                                wimaxButton.setEnabled(false);
+                                disableButtons();
                                 String busyboxResults = coretask.busyboxPresent();
                                 if (busyboxResults == "error") {
                                         tracker.trackEvent("BusyboxResult", "Fail", null, 0);
@@ -121,9 +115,7 @@ public class WimaxKeys extends Activity {
                                         finalResults.setText(getString(R.string.busyboxSuccess));
                                         showToast(getString(R.string.busyboxSuccess));
                                 }
-                                rootButton.setEnabled(true);
-                                busyboxButton.setEnabled(true);
-                                wimaxButton.setEnabled(true);
+                                enableButtons();
                                 tracker.dispatch();
                         }
                 } );
@@ -133,37 +125,34 @@ public class WimaxKeys extends Activity {
                 wimaxButton.setOnClickListener(new View.OnClickListener() {
                         public void onClick(View v) {
                                 tracker.trackEvent("ButtonClicked", "WiMAXCheck", null, 0);
-                                rootButton.setEnabled(false);
-                                busyboxButton.setEnabled(false);
-                                wimaxButton.setEnabled(false);
+                                disableButtons();
                                 String busyboxResults = coretask.busyboxPresent();
                                 if (busyboxResults == "error") {
                                         finalResults.setTextColor(getResources().getColor(R.color.fail_text));
                                         wimaxButton.setTextColor(getResources().getColor(R.color.fail_button));
                                         finalResults.setText(getString(R.string.busyboxFail));
                                         showToast(getString(R.string.busyboxFail));
+                                        enableButtons();
                                 } else {
                                         if (coretask.runShellCommand("su", "stdout", "busybox grep supersonic /system/build.prop").indexOf("supersonic") != - 1) {
                                                 wimaxPhone = "supersonic";
                                                 tracker.trackEvent("WiMAXCheck", "EVO", null, 0);
-                                                mTask = (MyTask) new MyTask().execute();
+                                                mTask = new WiMaxCheckTask().execute();
                                         } else {
                                                 if (coretask.runShellCommand("su", "stdout", "busybox grep speedy /system/build.prop").indexOf("speedy") != - 1) {
                                                         wimaxPhone = "speedy";
                                                         tracker.trackEvent("WiMAXCheck", "Shift", null, 0);
-                                                        mTask = (MyTask) new MyTask().execute();
+                                                        mTask = new WiMaxCheckTask().execute();
                                                 } else {
                                                         tracker.trackEvent("WiMAXCheck", "Not Compatible", null, 0);
                                                         finalResults.setTextColor(getResources().getColor(R.color.fail_text));
                                                         wimaxButton.setTextColor(getResources().getColor(R.color.fail_button));
                                                         finalResults.setText(getString(R.string.notCompatible));
                                                         showToast(getString(R.string.notCompatible));
+                                                        enableButtons();
                                                 } 
                                         }
                                 }
-                                rootButton.setEnabled(true);
-                                busyboxButton.setEnabled(true);
-                                wimaxButton.setEnabled(true);
                                 tracker.dispatch();
                         }
                 } );
@@ -192,6 +181,19 @@ public class WimaxKeys extends Activity {
                 disAccepted = settings.getBoolean("disclaimerAccepted", false);
                 if (! disAccepted) { showDialog(DIALOG_DISCLAIMER_ID); }
         }
+ 
+ 
+ 	private void disableButtons() {
+ 		rootButton.setEnabled(false);
+		busyboxButton.setEnabled(false);
+		wimaxButton.setEnabled(false);
+ 	}
+ 	
+ 	private void enableButtons() {
+	 	rootButton.setEnabled(true);
+		busyboxButton.setEnabled(true);
+		wimaxButton.setEnabled(true);
+ 	}
  
     /** http://developer.android.com/guide/topics/ui/menus.html */
  
@@ -297,18 +299,17 @@ public class WimaxKeys extends Activity {
  
     /** thanks birbeck */
  
-        private void parseResult(String mString) {
+        private void parseCheckResult(String result) {
         /** EditText text = (EditText)findViewById(R.id.FinalResults); */
  
  
-                if (mString.equals("error")) {
+                if ("error".equals(result)) {
                         finalResults.setTextColor(getResources().getColor(R.color.fail_text));
                         wimaxButton.setTextColor(getResources().getColor(R.color.fail_button));
                         tracker.trackEvent("WiMAXResults", "NoWiMAXPartition", null, 0);
                         finalResults.setText(getString(R.string.noWiMAXPartition));
                         showToast(getString(R.string.noWiMAXPartition));
-                }
-                if (mString.lastIndexOf("RSA PRIVATE KEY") == - 1) {
+                } else if (result != null && result.lastIndexOf("RSA PRIVATE KEY") == -1) {
                         tracker.trackEvent("WiMAXResults", "RSAKeyMissing", null, 0);
                         finalResults.setTextColor(getResources().getColor(R.color.fail_text));
                         wimaxButton.setTextColor(getResources().getColor(R.color.fail_button));
@@ -321,6 +322,7 @@ public class WimaxKeys extends Activity {
                         finalResults.setText(getString(R.string.WiMAXKeyPresent));
                         showToast(getString(R.string.WiMAXKeyPresent));
                 } 
+		enableButtons();
                 tracker.dispatch();
         } 
  
@@ -349,7 +351,7 @@ public class WimaxKeys extends Activity {
  
     /** thanks birbeck */
  
-        class MyTask extends AsyncTask<Void, Void, String> {
+        class WiMaxCheckTask extends AsyncTask<Void, Void, String> {
  
                 ProgressDialog mDialog = new ProgressDialog(WimaxKeys.this);
  
@@ -377,14 +379,10 @@ public class WimaxKeys extends Activity {
  
             /** coretask.hasRootPermissions(); */
  
-                        if (wimaxPhone != null) {
- 
-                                if (wimaxPhone.equals("supersonic")) {
-                                        return coretask.runShellCommand("su", "stdout", "busybox grep RSA /dev/mtd/mtd0"); 
-                                }
-                                if (wimaxPhone.equals("speedy")) {
-                                        return coretask.runShellCommand("su", "stdout", "busybox grep RSA /dev/block/mmcblk0p25");
-                                }
+                        if ("supersonic".equals(wimaxPhone)) {
+                                return coretask.runShellCommand("su", "stdout", "busybox grep RSA /dev/mtd/mtd0"); 
+                        } else if ("speedy".equals(wimaxPhone)) {
+                                return coretask.runShellCommand("su", "stdout", "busybox grep RSA /dev/block/mmcblk0p25");
                         }
                         return "error";
                 }
@@ -400,7 +398,7 @@ public class WimaxKeys extends Activity {
                                 mDialog.dismiss();
                         }
  
-                        parseResult(result);
+                        parseCheckResult(result);
                         mTask = null;
                 }
         }
