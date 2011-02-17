@@ -299,18 +299,17 @@ public class WimaxKeys extends Activity {
  
     /** thanks birbeck */
  
-        private void parseResult(String mString) {
+        private void parseCheckResult(String result) {
         /** EditText text = (EditText)findViewById(R.id.FinalResults); */
  
  
-                if (mString.equals("error")) {
+                if ("error".equals(result)) {
                         finalResults.setTextColor(getResources().getColor(R.color.fail_text));
                         wimaxButton.setTextColor(getResources().getColor(R.color.fail_button));
                         tracker.trackEvent("WiMAXResults", "NoWiMAXPartition", null, 0);
                         finalResults.setText(getString(R.string.noWiMAXPartition));
                         showToast(getString(R.string.noWiMAXPartition));
-                }
-                if (mString.lastIndexOf("RSA PRIVATE KEY") == - 1) {
+                } else if (result != null && result.lastIndexOf("RSA PRIVATE KEY") == -1) {
                         tracker.trackEvent("WiMAXResults", "RSAKeyMissing", null, 0);
                         finalResults.setTextColor(getResources().getColor(R.color.fail_text));
                         wimaxButton.setTextColor(getResources().getColor(R.color.fail_button));
@@ -380,14 +379,10 @@ public class WimaxKeys extends Activity {
  
             /** coretask.hasRootPermissions(); */
  
-                        if (wimaxPhone != null) {
- 
-                                if (wimaxPhone.equals("supersonic")) {
-                                        return coretask.runShellCommand("su", "stdout", "busybox grep RSA /dev/mtd/mtd0"); 
-                                }
-                                if (wimaxPhone.equals("speedy")) {
-                                        return coretask.runShellCommand("su", "stdout", "busybox grep RSA /dev/block/mmcblk0p25");
-                                }
+                        if ("supersonic".equals(wimaxPhone)) {
+                                return coretask.runShellCommand("su", "stdout", "busybox grep RSA /dev/mtd/mtd0"); 
+                        } else if ("speedy".equals(wimaxPhone)) {
+                                return coretask.runShellCommand("su", "stdout", "busybox grep RSA /dev/block/mmcblk0p25");
                         }
                         return "error";
                 }
@@ -403,7 +398,7 @@ public class WimaxKeys extends Activity {
                                 mDialog.dismiss();
                         }
  
-                        parseResult(result);
+                        parseCheckResult(result);
                         mTask = null;
                 }
         }
