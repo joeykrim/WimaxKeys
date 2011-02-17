@@ -73,9 +73,7 @@ public class WimaxKeys extends Activity {
                 rootButton.setOnClickListener(new View.OnClickListener() {
                         public void onClick(View v) {
                                 tracker.trackEvent("ButtonClicked", "RootCheck", null, 0);
-                                rootButton.setEnabled(false);
-                                busyboxButton.setEnabled(false);
-                                wimaxButton.setEnabled(false);
+                                disableButtons();
                                 Boolean rootCheck = coretask.hasRootPermission();
                                 if (rootCheck == true) {
                                         finalResults.setTextColor(getResources().getColor(R.color.success_text));
@@ -92,9 +90,7 @@ public class WimaxKeys extends Activity {
                                         showToast(getString(R.string.rootFail));
                                         tracker.trackEvent("RootResult", "Fail", null, 0);
                                 }
-                                rootButton.setEnabled(true);
-                                busyboxButton.setEnabled(true);
-                                wimaxButton.setEnabled(true);
+                                enableButtons();
                                 tracker.dispatch();
                         }
                 } );
@@ -104,9 +100,7 @@ public class WimaxKeys extends Activity {
                 busyboxButton.setOnClickListener(new View.OnClickListener() {
                         public void onClick(View v) {
                                 tracker.trackEvent("ButtonClicked", "BusyboxCheck", null, 0);
-                                rootButton.setEnabled(false);
-                                busyboxButton.setEnabled(false);
-                                wimaxButton.setEnabled(false);
+                                disableButtons();
                                 String busyboxResults = coretask.busyboxPresent();
                                 if (busyboxResults == "error") {
                                         tracker.trackEvent("BusyboxResult", "Fail", null, 0);
@@ -121,9 +115,7 @@ public class WimaxKeys extends Activity {
                                         finalResults.setText(getString(R.string.busyboxSuccess));
                                         showToast(getString(R.string.busyboxSuccess));
                                 }
-                                rootButton.setEnabled(true);
-                                busyboxButton.setEnabled(true);
-                                wimaxButton.setEnabled(true);
+                                enableButtons();
                                 tracker.dispatch();
                         }
                 } );
@@ -133,15 +125,14 @@ public class WimaxKeys extends Activity {
                 wimaxButton.setOnClickListener(new View.OnClickListener() {
                         public void onClick(View v) {
                                 tracker.trackEvent("ButtonClicked", "WiMAXCheck", null, 0);
-                                rootButton.setEnabled(false);
-                                busyboxButton.setEnabled(false);
-                                wimaxButton.setEnabled(false);
+                                disableButtons();
                                 String busyboxResults = coretask.busyboxPresent();
                                 if (busyboxResults == "error") {
                                         finalResults.setTextColor(getResources().getColor(R.color.fail_text));
                                         wimaxButton.setTextColor(getResources().getColor(R.color.fail_button));
                                         finalResults.setText(getString(R.string.busyboxFail));
                                         showToast(getString(R.string.busyboxFail));
+                                        enableButtons();
                                 } else {
                                         if (coretask.runShellCommand("su", "stdout", "busybox grep supersonic /system/build.prop").indexOf("supersonic") != - 1) {
                                                 wimaxPhone = "supersonic";
@@ -158,12 +149,10 @@ public class WimaxKeys extends Activity {
                                                         wimaxButton.setTextColor(getResources().getColor(R.color.fail_button));
                                                         finalResults.setText(getString(R.string.notCompatible));
                                                         showToast(getString(R.string.notCompatible));
+                                                        enableButtons();
                                                 } 
                                         }
                                 }
-                                rootButton.setEnabled(true);
-                                busyboxButton.setEnabled(true);
-                                wimaxButton.setEnabled(true);
                                 tracker.dispatch();
                         }
                 } );
@@ -192,6 +181,19 @@ public class WimaxKeys extends Activity {
                 disAccepted = settings.getBoolean("disclaimerAccepted", false);
                 if (! disAccepted) { showDialog(DIALOG_DISCLAIMER_ID); }
         }
+ 
+ 
+ 	private void disableButtons() {
+ 		rootButton.setEnabled(false);
+		busyboxButton.setEnabled(false);
+		wimaxButton.setEnabled(false);
+ 	}
+ 	
+ 	private void enableButtons() {
+	 	rootButton.setEnabled(true);
+		busyboxButton.setEnabled(true);
+		wimaxButton.setEnabled(true);
+ 	}
  
     /** http://developer.android.com/guide/topics/ui/menus.html */
  
@@ -321,6 +323,7 @@ public class WimaxKeys extends Activity {
                         finalResults.setText(getString(R.string.WiMAXKeyPresent));
                         showToast(getString(R.string.WiMAXKeyPresent));
                 } 
+		enableButtons();
                 tracker.dispatch();
         } 
  
