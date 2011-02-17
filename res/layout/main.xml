@@ -97,6 +97,6 @@
 	android:id="@+id/Credits" 
 	android:layout_width="wrap_content" 
 	android:layout_height="wrap_content"
-	android:textColor="#ff000000"></TextView>
+	android:textColor="#ffffffff"></TextView>
 </LinearLayout>
 </ScrollView>
