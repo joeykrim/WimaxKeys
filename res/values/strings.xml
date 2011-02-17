@@ -2,6 +2,14 @@
 <resources>
     <string name="Welcome">Check for your RSA encrypted WiMAX Keys!</string>
     <string name="app_name">WiMAX RSA Key Checker</string>
+    <string name="warning">Warning</string>
+    <string name="warningMsg">Due to the large size of the WiMAX partition, the key checking process can take up to 45 seconds.</string>
+    <string name="verifyRoot">Verify Root Access</string>
+    <string name="verifyBusybox">Verify Busybox Installed</string>
+    <string name="verifyWimaxRSA">Verify WiMAX RSA Key</string>
+    <string name="results">Results: </string>
+    <string name="authorName">by joeykrim</string>
+    <string name="authorWebSite">Author Web Site</string>
     <string name="Credits">Credits: <a href="http://www.appsbybirbeck.com/">birbeck</a>, <a href="http://xpl0.it">AntiSociaL</a>, LouZiffer, <a href="http://www.twitter.com/SHlFT">shift</a>, <a href="http://android.slushpupie.com">slushpupie</a>, thenuge, <a href="http://twitter.com/shinzul">shinzul</a>, <a href="http://forum.xda-developers.com/member.php?u=1561342">toastcfh</a>, <a href="http://www.sdx-developers.com">sdx-developers.com</a>, <a href="http://twitter.com/teamwinandroid">#teamwin</a> and <a href="http://webchat.freenode.net/">#htc-evo</a>!" </string>
     <string name="menuAbout">About</string> 
     <string name="menuDisclaimer">Disclaimer</string>
@@ -21,5 +29,4 @@
     <string name="WiMAXKeyMissing">Sorry, your WiMAX RSA key is missing!</string>
     <string name="WiMAXKeyPresent">Congratulations! Your RSA key is present!</string>
     <string name="WiMAXKeyCheckMsg">Checking for the WiMAX RSA Key! This can take up to 45 seconds. Please be patient!</string>
-    <string name="Warning">Due to the large size of the WiMAX partition, the key checking process can take up to 45 seconds.</string>
 </resources>
