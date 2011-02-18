@@ -317,6 +317,7 @@ public class WimaxKeys extends Activity {
 				line = data.readLine();
 			}
 		} catch (Exception e) {
+			Log.e("WimaxKeyCheck", "Error reading build.prop", e);
 			wimaxPhone = null;
 		}
 		wimaxPhone = null;
