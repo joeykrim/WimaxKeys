@@ -31,6 +31,7 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
+import java.io.FileNotFoundException;
 
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
@@ -375,23 +376,29 @@ public class WimaxKeys extends Activity {
         private void parseVerifyResult(String result) {
         	
                 if("match".equals(result)) {
-                	tracker.trackEvent("WiMAXResults", "RSAKeyMatch", null, 0);
+                	tracker.trackEvent("WiMAXResults", "RSACertMatch", null, 0);
                         finalResults.setTextColor(getResources().getColor(R.color.success_text));
                         wimaxVerifyButton.setTextColor(getResources().getColor(R.color.success_button));
-                        finalResults.setText(getString(R.string.WiMAXKeyMatch));
-                        showToast(getString(R.string.WiMAXKeyMatch));
+                        finalResults.setText(getString(R.string.WiMAXCertMatch));
+                        showToast(getString(R.string.WiMAXCertMatch));
                 } else if("no match".equals(result)) {
-                	tracker.trackEvent("WiMAXResults", "RSAKeyNoMatch", null, 0);
+                	tracker.trackEvent("WiMAXResults", "RSACertNoMatch", null, 0);
                         finalResults.setTextColor(getResources().getColor(R.color.warn_text));
                         wimaxVerifyButton.setTextColor(getResources().getColor(R.color.warn_button));
-                        finalResults.setText(getString(R.string.WiMAXKeyNoMatch));
-                        showToast(getString(R.string.WiMAXKeyNoMatch));
+                        finalResults.setText(getString(R.string.WiMAXCertNoMatch));
+                        showToast(getString(R.string.WiMAXCertNoMatch));
+                } else if("no device".equals(result)) {
+                	tracker.trackEvent("WiMAXResults", "RSACertNoDevice", null, 0);
+                        finalResults.setTextColor(getResources().getColor(R.color.warn_text));
+                        wimaxVerifyButton.setTextColor(getResources().getColor(R.color.warn_button));
+                        finalResults.setText(getString(R.string.WiMAXCertNoDevice));
+                        showToast(getString(R.string.WiMAXCertNoDevice));
                 } else {
         		finalResults.setTextColor(getResources().getColor(R.color.fail_text));
                         wimaxVerifyButton.setTextColor(getResources().getColor(R.color.fail_button));
-                        tracker.trackEvent("WiMAXResults", "NoWiMAXVerify", null, 0);
-                        finalResults.setText(getString(R.string.noWiMAXVerify));
-                        showToast(getString(R.string.noWiMAXVerify));
+                        tracker.trackEvent("WiMAXResults", "RSACertVerifyError", null, 0);
+                        finalResults.setText(getString(R.string.WiMAXCertError));
+                        showToast(getString(R.string.WiMAXCertError));
                 }
                 tracker.dispatch();
                 enableButtons();
@@ -504,8 +511,13 @@ public class WimaxKeys extends Activity {
 					// Get the MAC address of the wimax0 device
 					
 					File file = new File("/sys/class/net/wimax0/address");
-					BufferedReader data = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
-					mac = data.readLine();
+					try {
+						BufferedReader data = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+						mac = data.readLine();
+					} catch (FileNotFoundException e) {
+						return "no device";
+					}
+
 					
 					if(mac == null || mac.equals("")) {
 						return "no device";
