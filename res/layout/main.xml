@@ -47,7 +47,7 @@
 	android:layout_width="wrap_content" 
 	android:layout_height="wrap_content"
 	android:layout_gravity="center"></Button>
-<Button android:text="Match WiMAX RSA Key"
+<Button android:text="@string/verifyWimaxCert"
 	android:id="@+id/wimaxVerifyButton" 
 	android:layout_width="wrap_content" 
 	android:layout_height="wrap_content"

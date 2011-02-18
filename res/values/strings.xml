@@ -7,6 +7,7 @@
     <string name="verifyRoot">Verify Root Access</string>
     <string name="verifyBusybox">Verify Busybox Installed</string>
     <string name="verifyWimaxRSA">Verify WiMAX RSA Key</string>
+    <string name="verifyWimaxCert">Verify WiMAX Certificate</string>
     <string name="results">Results: </string>
     <string name="authorName">by joeykrim</string>
     <string name="authorWebSite">Author Web Site</string>
