@@ -105,18 +105,18 @@ public class WimaxKeys extends Activity {
                                 if("supersonic".equals(wimaxPhone)) {
 	                                tracker.trackEvent("WiMAXCheck", "EVO", null, 0);
 	                                tracker.dispatch();
-	                        } else if("speedy".equals(wimaxPhone)) {
-	                        	tracker.trackEvent("WiMAXCheck", "Shift", null, 0);
-	                        	tracker.dispatch();
-	                        } else {
-	                        	tracker.trackEvent("WiMAXCheck", "Not Compatible", null, 0);
-					finalResults.setTextColor(getResources().getColor(R.color.fail_text));
-					wimaxRSAButton.setTextColor(getResources().getColor(R.color.fail_button));
-					finalResults.setText(getString(R.string.notCompatible));
-					showToast(getString(R.string.notCompatible));
-					enableButtons();
-					tracker.dispatch();
-					return;
+                                } else if("speedy".equals(wimaxPhone)) {
+                                	tracker.trackEvent("WiMAXCheck", "Shift", null, 0);
+                                	tracker.dispatch();
+                                } else {
+                                	tracker.trackEvent("WiMAXCheck", "Not Compatible", null, 0);
+                                	finalResults.setTextColor(getResources().getColor(R.color.fail_text));
+                                	wimaxRSAButton.setTextColor(getResources().getColor(R.color.fail_button));
+                                	finalResults.setText(getString(R.string.notCompatible));
+                                	showToast(getString(R.string.notCompatible));
+                                	enableButtons();
+                                	tracker.dispatch();
+                                	return;
                                 }
                                 mTask = new WiMaxCheckTask().execute();
                         }
