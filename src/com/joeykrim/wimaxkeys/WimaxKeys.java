@@ -32,6 +32,8 @@ import java.io.DataOutputStream;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.io.FileNotFoundException;
+import android.content.Context;
+import java.lang.reflect.Method;
 
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
@@ -47,6 +49,12 @@ public class WimaxKeys extends Activity {
         private boolean disAccepted;
         static final int DIALOG_DISCLAIMER_ID = 0;
         static final int DIALOG_ABOUT_ID = 1;
+        private static final int WIMAX_UNKNOWN = -1;
+        private static final int WIMAX_DISABLING = 0;
+        private static final int WIMAX_DISABLED = 1;
+        private static final int WIMAX_ENABLING = 2;
+        private static final int WIMAX_ENABLED = 3;
+        private WimaxKeys me;
 
         GoogleAnalyticsTracker tracker;
 
@@ -60,6 +68,7 @@ public class WimaxKeys extends Activity {
  
                 tracker = GoogleAnalyticsTracker.getInstance();
                 tracker.start("", this);
+                me = this;
  
 		/** Thanks AntiSocial!
 		 * http://developer.android.com/reference/android/os/Build.html */ 
@@ -345,6 +354,42 @@ public class WimaxKeys extends Activity {
 		}
 		return process;
 	}
+	
+	private static int getWimaxState(Context context) {
+                int state = 0;
+                
+                try {
+                        Object wimaxManager = context.getSystemService("wimax");
+                        Method getWimaxState = wimaxManager.getClass().getMethod("getWimaxState", (Class[]) null);
+                        state = (Integer) getWimaxState.invoke(wimaxManager, (Object[]) null);
+                }
+                catch (Exception e) {
+                        Log.e("WimaxKeyCheck", "Error getting wimax state", e);
+                        state = WIMAX_UNKNOWN;
+                }
+                
+                return state;
+                
+        }
+ 
+	private void setWimaxEnabled(Context context, boolean enabled) {
+                int wimaxState = getWimaxState(context);
+                        
+                try {
+                        Object wimaxManager = context.getSystemService("wimax");
+                        Method setWimaxEnabled = wimaxManager.getClass().getMethod("setWimaxEnabled", new Class[] { Boolean.TYPE });
+                        
+                        if (enabled) {
+                                setWimaxEnabled.invoke(wimaxManager, new Object[] { Boolean.TRUE });
+                        } else {
+                                setWimaxEnabled.invoke(wimaxManager, new Object[] { Boolean.FALSE });
+                        }
+                }
+                catch (Exception e) {
+                        Log.e("WimaxKeyCheck", "could not toggle wimax state", e);
+                        return;
+                }
+        }
  
     /** thanks birbeck */
         private void parseCheckResult(String result) {
@@ -428,7 +473,8 @@ public class WimaxKeys extends Activity {
  
         class WiMaxValidateTask extends AsyncTask<Void, Void, String> {
        		ProgressDialog mDialog = new ProgressDialog(WimaxKeys.this);
- 
+ 		boolean wimaxEnabled = false;
+ 		
                 @Override
                 protected void onPreExecute() {
                         mDialog.setMessage(getString(R.string.WiMAXKeyCheckMsg));
@@ -454,6 +500,17 @@ public class WimaxKeys extends Activity {
 					device = "/dev/block/mmcblk0p25";
 				} else {
 					return "error";
+				}
+				int state = getWimaxState(me);
+				if(state == WIMAX_ENABLED || state == WIMAX_ENABLING) {
+					wimaxEnabled = true;
+				} else {
+					setWimaxEnabled(me,true);
+					synchronized (this) {
+						try {
+							this.wait(5000); //give it time to enable
+						} catch (InterruptedException e) { }
+					}
 				}
 				try {
 					boolean foundStart = false;
@@ -560,6 +617,9 @@ public class WimaxKeys extends Activity {
  
                 @Override
                 protected void onPostExecute(String result) {
+                	if(!wimaxEnabled) {
+				setWimaxEnabled(me,false);
+			}
                         if (isCancelled()) {
                                 return;
                         }

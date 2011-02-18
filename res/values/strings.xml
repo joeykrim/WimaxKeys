@@ -33,4 +33,6 @@
     <string name="WiMAXCertNoMatch">Your certificate is present, does not match your hardware. This might be a problem.</string>
     <string name="WiMAXCertNoDevice">Your certificate is present, but without 4G enabled it cannot be verified.</string>
     <string name="WiMAXKeyCheckMsg">Checking for the WiMAX RSA Key! This can take up to 45 seconds. Please be patient!</string>
+    <string name="enable4G">Enabling WiMAX</string>
+    <string name="disable4G">Disabling WiMAX</string>
 </resources>
