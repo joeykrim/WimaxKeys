@@ -25,6 +25,6 @@
     <string name="notCompatible">Sorry, this phone does not identify itself as an HTC EVO or an HTC Shift!</string>
     <string name="noWiMAXPartition">No WiMAX partition present at /dev/mtd/mtd0 for the EVO or /dev/block/mmcblk0p25 for the Shift</string>
     <string name="WiMAXKeyMissing">Sorry, your WiMAX RSA key is missing!</string>
-    <string name="WiMAXKeyPresent">Congratulations! Your RSA key is present!</string>
+    <string name="WiMAXKeyPresent">Congratulations! Your HTC %s RSA key is present!</string>
     <string name="WiMAXKeyCheckMsg">Checking for the WiMAX RSA Key! This can take up to 45 seconds. Please be patient!</string>
 </resources>

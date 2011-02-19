@@ -79,7 +79,7 @@ public class WimaxKeys extends Activity {
                                     tracker.trackEvent("RootResult", "Success", null, 0);
                                     showToast(getString(R.string.rootSuccess));
                                 	setWimaxPhone();
-                                	if(!"supersonic".equals(wimaxPhone) && !"speedy".equals(wimaxPhone)) {
+                                	if(!"EVO".equals(wimaxPhone) && !"Shift".equals(wimaxPhone)) {
                                 		tracker.trackEvent("WiMAXCheck", "Not Compatible", null, 0);
                                 		finalResults.setTextColor(getResources().getColor(R.color.fail_text));
                                 		wimaxRSAButton.setTextColor(getResources().getColor(R.color.fail_button));
@@ -242,12 +242,12 @@ public class WimaxKeys extends Activity {
         			if(line.contains("supersonic")) {
         				tracker.trackEvent("WiMAXCheck", "EVO", null, 0);
         				tracker.dispatch();
-        				wimaxPhone = "supersonic";
+        				wimaxPhone = "EVO";
         				return;
         			} else if(line.contains("speedy")) {
         				tracker.trackEvent("WiMAXCheck", "Shift", null, 0);
         				tracker.dispatch();
-        				wimaxPhone = "speedy";
+        				wimaxPhone = "Shift";
         				return;
         			}
         			line = data.readLine();
@@ -298,14 +298,14 @@ public class WimaxKeys extends Activity {
  				tracker.trackEvent("WiMAXResults", "RSAKeyPresent", null, 0);
                 finalResults.setTextColor(getResources().getColor(R.color.success_text));
                 wimaxRSAButton.setTextColor(getResources().getColor(R.color.success_button));
-                finalResults.setText(getString(R.string.WiMAXKeyPresent));
-                showToast(getString(R.string.WiMAXKeyPresent));
+                finalResults.setText(getString(R.string.WiMAXKeyPresent, wimaxPhone));
+                showToast(getString(R.string.WiMAXKeyPresent, wimaxPhone));
         	} else if("not found".equals(result)) {
  				tracker.trackEvent("WiMAXResults", "RSAKeyMissing", null, 0);
  				finalResults.setTextColor(getResources().getColor(R.color.fail_text));
  				wimaxRSAButton.setTextColor(getResources().getColor(R.color.fail_button));
- 				finalResults.setText(getString(R.string.WiMAXKeyMissing));
- 				showToast(getString(R.string.WiMAXKeyMissing));
+ 				finalResults.setText(getString(R.string.WiMAXKeyMissing, wimaxPhone));
+ 				showToast(getString(R.string.WiMAXKeyMissing, wimaxPhone));
         	} else {
  				tracker.trackEvent("WiMAXResults", "Error", null, 0);
  				finalResults.setTextColor(getResources().getColor(R.color.fail_text));
@@ -361,9 +361,9 @@ public class WimaxKeys extends Activity {
                 		int count = 100;
                 		int start = 2100 - count; //3071 is the end of the file
  				
-                		if ("supersonic".equals(wimaxPhone)) {
+                		if ("EVO".equals(wimaxPhone)) {
                 			device = "/dev/mtd/mtd0ro";
-                		} else if("speedy".equals(wimaxPhone)) {
+                		} else if("Shift".equals(wimaxPhone)) {
                 			device = "/dev/block/mmcblk0p25";
                 		}
                 		try {
