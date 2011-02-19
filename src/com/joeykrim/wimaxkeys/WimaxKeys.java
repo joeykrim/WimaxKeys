@@ -313,26 +313,26 @@ public class WimaxKeys extends Activity {
         /** EditText text = (EditText)findViewById(R.id.FinalResults); */
  
  		if("found".equals(result)) {
- 			tracker.trackEvent("WiMAXResults", "RSAKeyPresent", null, 0);
-                        finalResults.setTextColor(getResources().getColor(R.color.success_text));
-                        wimaxRSAButton.setTextColor(getResources().getColor(R.color.success_button));
-                        finalResults.setText(getString(R.string.WiMAXKeyPresent));
-                        showToast(getString(R.string.WiMAXKeyPresent));
+ 				tracker.trackEvent("WiMAXResults", "RSAKeyPresent", null, 0);
+                finalResults.setTextColor(getResources().getColor(R.color.success_text));
+                wimaxRSAButton.setTextColor(getResources().getColor(R.color.success_button));
+                finalResults.setText(getString(R.string.WiMAXKeyPresent));
+                showToast(getString(R.string.WiMAXKeyPresent));
  		} else if("not found".equals(result)) {
- 			tracker.trackEvent("WiMAXResults", "RSAKeyMissing", null, 0);
-                        finalResults.setTextColor(getResources().getColor(R.color.fail_text));
-                        wimaxRSAButton.setTextColor(getResources().getColor(R.color.fail_button));
-                        finalResults.setText(getString(R.string.WiMAXKeyMissing));
-                        showToast(getString(R.string.WiMAXKeyMissing));
+ 				tracker.trackEvent("WiMAXResults", "RSAKeyMissing", null, 0);
+ 				finalResults.setTextColor(getResources().getColor(R.color.fail_text));
+ 				wimaxRSAButton.setTextColor(getResources().getColor(R.color.fail_button));
+ 				finalResults.setText(getString(R.string.WiMAXKeyMissing));
+ 				showToast(getString(R.string.WiMAXKeyMissing));
  		} else {
-                        finalResults.setTextColor(getResources().getColor(R.color.fail_text));
-                        wimaxRSAButton.setTextColor(getResources().getColor(R.color.fail_button));
-                        tracker.trackEvent("WiMAXResults", "NoWiMAXPartition", null, 0);
-                        finalResults.setText(getString(R.string.noWiMAXPartition));
-                        showToast(getString(R.string.noWiMAXPartition));
-                } 
+ 				finalResults.setTextColor(getResources().getColor(R.color.fail_text));
+ 				wimaxRSAButton.setTextColor(getResources().getColor(R.color.fail_button));
+ 				tracker.trackEvent("WiMAXResults", "NoWiMAXPartition", null, 0);
+ 				finalResults.setText(getString(R.string.noWiMAXPartition));
+ 				showToast(getString(R.string.noWiMAXPartition));
+ 		}
+ 		tracker.dispatch();
 		enableButtons();
-                tracker.dispatch();
         } 
  
         
