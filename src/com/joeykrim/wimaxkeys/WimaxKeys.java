@@ -166,7 +166,7 @@ public class WimaxKeys extends Activity {
                 switch (item.getItemId()) {
                         case R.id.menuAbout:
                                 tracker.trackEvent("MenuItemSelected", "AboutDialog", null, 0);
-                                showDialog(1);
+                                showDialog(DIALOG_ABOUT_ID);
                                 tracker.dispatch();
                                 return true;
                         case R.id.menuDisclaimer:
