@@ -379,9 +379,9 @@ public class WimaxKeys extends Activity {
                 		int count = 100;
                 		int start = 2100 - count; //3071 is the end of the file
  				
-                		if (wimaxPhone.equals("supersonic")) {
+                		if ("supersonic".equals(wimaxPhone)) {
                 			device = "/dev/mtd/mtd0ro";
-                		} else if(wimaxPhone.equals("speedy")) {
+                		} else if("speedy".equals(wimaxPhone)) {
                 			device = "/dev/block/mmcblk0p25";
                 		}
                 		try {
