@@ -79,7 +79,7 @@ public class WimaxKeys extends Activity {
                                     tracker.trackEvent("RootResult", "Success", null, 0);
                                     showToast(getString(R.string.rootSuccess));
                                 	setWimaxPhone();
-                                	if(!"EVO".equals(wimaxPhone) && !"Shift".equals(wimaxPhone)) {
+                                	if(!"EVO".equals(wimaxPhone) && !"EVO Shift".equals(wimaxPhone)) {
                                 		tracker.trackEvent("WiMAXCheck", "Not Compatible", null, 0);
                                 		finalResults.setTextColor(getResources().getColor(R.color.fail_text));
                                 		wimaxRSAButton.setTextColor(getResources().getColor(R.color.fail_button));
@@ -247,7 +247,7 @@ public class WimaxKeys extends Activity {
         			} else if(line.contains("speedy")) {
         				tracker.trackEvent("WiMAXCheck", "Shift", null, 0);
         				tracker.dispatch();
-        				wimaxPhone = "Shift";
+        				wimaxPhone = "EVO Shift";
         				return;
         			}
         			line = data.readLine();
@@ -363,7 +363,7 @@ public class WimaxKeys extends Activity {
  				
                 		if ("EVO".equals(wimaxPhone)) {
                 			device = "/dev/mtd/mtd0ro";
-                		} else if("Shift".equals(wimaxPhone)) {
+                		} else if("EVO Shift".equals(wimaxPhone)) {
                 			device = "/dev/block/mmcblk0p25";
                 		}
                 		try {
