@@ -372,64 +372,64 @@ public class WimaxKeys extends Activity {
  
                 @Override
                 protected String doInBackground(Void... params) {
-         	   if (wimaxPhone != null) {
- 				Process process = null;
- 				String device = null;
- 				int count = 100;
- 				int start = 2100 - count; //3071 is the end of the file
+                	if (wimaxPhone != null) {
+                		Process process = null;
+                		String device = null;
+                		int count = 100;
+                		int start = 2100 - count; //3071 is the end of the file
  				
- 				if (wimaxPhone.equals("supersonic")) {
-					device = "/dev/mtd/mtd0ro";
-				} else if(wimaxPhone.equals("speedy")) {
-					device = "/dev/block/mmcblk0p25";
-				}
-				try {
-					while (start > 0) {
-						process = catRange(device, start, count);
-						if(process == null) {
-							return "error";
-						}
-						BufferedReader data = new BufferedReader(new InputStreamReader(process.getInputStream()));
-						String line = data.readLine();
-						boolean foundStart = false;
-						boolean foundEnd = false;
-						while (line != null) {
-							if(line.contains("-----BEGIN RSA PRIVATE KEY-----")) {
-								foundStart = true;
-							}
-							if(line.contains("-----END RSA PRIVATE KEY-----")) {
-								foundEnd = true;
-								break;
-							}
+                		if (wimaxPhone.equals("supersonic")) {
+                			device = "/dev/mtd/mtd0ro";
+                		} else if(wimaxPhone.equals("speedy")) {
+                			device = "/dev/block/mmcblk0p25";
+                		}
+                		try {
+                			while (start > 0) {
+                				process = catRange(device, start, count);
+                				if(process == null) {
+                					return "error";
+                				}
+                				BufferedReader data = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                				String line = data.readLine();
+                				boolean foundStart = false;
+                				boolean foundEnd = false;
+                				while (line != null) {
+                					if(line.contains("-----BEGIN RSA PRIVATE KEY-----")) {
+                						foundStart = true;
+                					}
+                					if(line.contains("-----END RSA PRIVATE KEY-----")) {
+                						foundEnd = true;
+                						break;
+                					}
 							
-							line = data.readLine();
-						}
-						if(foundStart || foundEnd) {
-							//our window size cut it off?
+                					line = data.readLine();
+                				}
+                				if(foundStart || foundEnd) {
+                					//our window size cut it off?
 							
-							if(foundStart && !foundEnd) {
-								//shouldnt be more than a few blocks
-								count = count++;
-								continue;
-							} else if(!foundStart && foundEnd) {
-								start = start--;
-								continue;
-							} else {
-								return "found";
-							}
-						}
+                					if(foundStart && !foundEnd) {
+                						//shouldnt be more than a few blocks
+                						count = count++;
+                						continue;
+                					} else if(!foundStart && foundEnd) {
+                						start = start--;
+                						continue;
+                					} else {
+                						return "found";
+                					}
+                				}
 						
-						start = start - count;
-					}
-					// never found it
-					return "not found";
-				} catch (Exception e) {
-					Log.d("WimaxKeyCheck","error",e);
-					//TODO
-				}
+                				start = start - count;
+                			}
+                			//never found it
+                			return "not found";
+                		} catch (Exception e) {
+                			Log.d("WimaxKeyCheck","error",e);
+                			//TODO
+                		}
 	                                
-                        }
-                        return "error";
+                	}
+                	return "error";
                 }
  
  
