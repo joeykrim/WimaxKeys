@@ -102,13 +102,7 @@ public class WimaxKeys extends Activity {
                                 tracker.trackEvent("ButtonClicked", "WiMAXCheck", null, 0);
                                 disableButtons();
                                 setWimaxPhone();
-                                if("supersonic".equals(wimaxPhone)) {
-	                                	tracker.trackEvent("WiMAXCheck", "EVO", null, 0);
-	                                	tracker.dispatch();
-                                } else if("speedy".equals(wimaxPhone)) {
-                                		tracker.trackEvent("WiMAXCheck", "Shift", null, 0);
-                                		tracker.dispatch();
-                                } else {
+                                if(!"supersonic".equals(wimaxPhone) && !"speedy".equals(wimaxPhone)) {
                                 		tracker.trackEvent("WiMAXCheck", "Not Compatible", null, 0);
                                 		finalResults.setTextColor(getResources().getColor(R.color.fail_text));
                                 		wimaxRSAButton.setTextColor(getResources().getColor(R.color.fail_button));
@@ -263,9 +257,13 @@ public class WimaxKeys extends Activity {
 			String line = data.readLine();
 			while(line != null) {
 				if(line.contains("supersonic")) {
+                	tracker.trackEvent("WiMAXCheck", "EVO", null, 0);
+                	tracker.dispatch();
 					wimaxPhone = "supersonic";
 					return;
 				} else if(line.contains("speedy")) {
+            		tracker.trackEvent("WiMAXCheck", "Shift", null, 0);
+            		tracker.dispatch();
 					wimaxPhone = "speedy";
 					return;
 				}
