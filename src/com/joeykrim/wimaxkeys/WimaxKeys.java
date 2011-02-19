@@ -33,11 +33,9 @@ import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
 public class WimaxKeys extends Activity {
  
-        private Button rootButton;
         private Button wimaxRSAButton;
         private Button authorButton;
         private TextView finalResults;
-        private boolean rootCheck;
         private String wimaxPhone = null;
         public static final String PREFS_NAME = "PrefFile";
         private boolean disAccepted;
@@ -70,31 +68,6 @@ public class WimaxKeys extends Activity {
                 tracker.dispatch();
  
                 finalResults = (TextView) findViewById(R.id.FinalResults);
-
-                rootButton = (Button) findViewById(R.id.rootButton);
- 
-                rootButton.setOnClickListener(new View.OnClickListener() {
-                        public void onClick(View v) {
-                                tracker.trackEvent("ButtonClicked", "RootCheck", null, 0);
-                                disableButtons();
-                                rootCheck = canSU();
-                                if (rootCheck == true) {
-                                        finalResults.setTextColor(getResources().getColor(R.color.success_text));
-                                        rootButton.setTextColor(getResources().getColor(R.color.success_button));
-                                        finalResults.setText(getString(R.string.rootSuccess));
-                                        showToast(getString(R.string.rootSuccess));
-                                        tracker.trackEvent("RootResult", "Success", null, 0);
-                                } else {
-                                        finalResults.setTextColor(getResources().getColor(R.color.fail_text));
-                                        rootButton.setTextColor(getResources().getColor(R.color.fail_button));
-                                        finalResults.setText(getString(R.string.rootFail));
-                                        showToast(getString(R.string.rootFail));
-                                        tracker.trackEvent("RootResult", "Fail", null, 0);
-                                }
-                                enableButtons();
-                                tracker.dispatch();
-                        }
-                } );
  
                 wimaxRSAButton = (Button) findViewById(R.id.wimaxRSAButton);
  
@@ -102,7 +75,9 @@ public class WimaxKeys extends Activity {
                         public void onClick(View v) {
                                 tracker.trackEvent("ButtonClicked", "WiMAXCheck", null, 0);
                                 disableButtons();
-                                if(rootCheck || canSU()) {
+                                if(canSU()) {
+                                    tracker.trackEvent("RootResult", "Success", null, 0);
+                                    showToast(getString(R.string.rootSuccess));
                                 	setWimaxPhone();
                                 	if(!"supersonic".equals(wimaxPhone) && !"speedy".equals(wimaxPhone)) {
                                 		tracker.trackEvent("WiMAXCheck", "Not Compatible", null, 0);
@@ -115,12 +90,13 @@ public class WimaxKeys extends Activity {
                                 	}
                                 	mTask = new WiMaxCheckTask().execute();
                                 } else {
+                                    tracker.trackEvent("RootResult", "Fail", null, 0);
+                                    wimaxRSAButton.setTextColor(getResources().getColor(R.color.fail_button));
                                     finalResults.setTextColor(getResources().getColor(R.color.fail_text));
-                                    rootButton.setTextColor(getResources().getColor(R.color.fail_button));
                                     finalResults.setText(getString(R.string.rootFail));
                                     showToast(getString(R.string.rootFail));
-                                    tracker.trackEvent("RootResult", "Fail", null, 0);
                                 }
+                                tracker.dispatch();
                         		enableButtons();
                         }
                 } );
@@ -149,12 +125,10 @@ public class WimaxKeys extends Activity {
  
  
         private void disableButtons() {
-        	rootButton.setEnabled(false);
         	wimaxRSAButton.setEnabled(false);
         }
  	
         private void enableButtons() {
-        	rootButton.setEnabled(true);
         	wimaxRSAButton.setEnabled(true);
         }
  
