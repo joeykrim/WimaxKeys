@@ -118,36 +118,36 @@ public class WimaxKeys extends Activity {
  
                 authorButton = (Button) findViewById(R.id.authorButton);
  
-        /** thanks AntiSociaL */
+                /** thanks AntiSociaL */
                 authorButton.setOnClickListener(new View.OnClickListener() {
                         public void onClick(View v) {
                                 tracker.trackEvent("ButtonClicked", "AuthorWebSite", null, 0);
                                 tracker.dispatch();
                                 String url = "http://www.joeyconway.com";
-                /** Intent i = new Intent(Intent.ACTION_VIEW);
-                 * i.setData(Uri.parse(url)); */ 
+                                /** Intent i = new Intent(Intent.ACTION_VIEW);
+                                 * i.setData(Uri.parse(url)); */ 
                                 Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                                 startActivity(i);
                         }
                 } );
                 TextView credits = (TextView) findViewById(R.id.Credits);
                 credits.setMovementMethod(LinkMovementMethod.getInstance());
-        /** http://developer.android.com/guide/topics/data/data-storage.html#pref */
+                /** http://developer.android.com/guide/topics/data/data-storage.html#pref */
                 SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
                 disAccepted = settings.getBoolean("disclaimerAccepted", false);
                 if (! disAccepted) { showDialog(DIALOG_DISCLAIMER_ID); }
         }
  
  
- 	private void disableButtons() {
- 		rootButton.setEnabled(false);
-		wimaxRSAButton.setEnabled(false);
- 	}
+        private void disableButtons() {
+        	rootButton.setEnabled(false);
+        	wimaxRSAButton.setEnabled(false);
+        }
  	
- 	private void enableButtons() {
-	 	rootButton.setEnabled(true);
-		wimaxRSAButton.setEnabled(true);
- 	}
+        private void enableButtons() {
+        	rootButton.setEnabled(true);
+        	wimaxRSAButton.setEnabled(true);
+        }
  
  	
     /** http://developer.android.com/guide/topics/ui/menus.html */
@@ -185,7 +185,7 @@ public class WimaxKeys extends Activity {
         }
  
         
-    /** http://www.monkeycancode.com/android-show-a-legal-agreement-dialog-before-program-launches */
+        /** http://www.monkeycancode.com/android-show-a-legal-agreement-dialog-before-program-launches */
         @Override
         protected Dialog onCreateDialog(int id) {
                 Dialog dialog;
@@ -194,7 +194,7 @@ public class WimaxKeys extends Activity {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                                 builder.setMessage(R.string.disclaimerMessage) .setCancelable(false) .setTitle(R.string.menuDisclaimer) .setPositiveButton(R.string.disclaimerAgree, new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int id) {
-                                                if (! disAccepted) {
+                                                if (!disAccepted) {
                                                         tracker.trackEvent("DisclaimerDialog", "DisclaimerAgree", null, 0);
                                                         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
                                                         SharedPreferences.Editor editor = settings.edit();
@@ -213,7 +213,7 @@ public class WimaxKeys extends Activity {
                                 } );
                                 AlertDialog alert = builder.create();
                                 return alert;
-                //break;
+                                //break;
                         case DIALOG_ABOUT_ID:
                                 AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
                                 builder1.setMessage(getString(R.string.versionInfo) + System.getProperty("line.separator") + getString(R.string.aboutMsg)) .setCancelable(false) .setTitle(R.string.menuAbout) .setPositiveButton(R.string.menuAboutOkay, new DialogInterface.OnClickListener() {
@@ -221,7 +221,7 @@ public class WimaxKeys extends Activity {
                                 } );
                                 AlertDialog alert1 = builder1.create();
                                 return alert1;
-                //break;
+                                //break;
                         default:
                                 dialog = null;
                 }
@@ -250,94 +250,93 @@ public class WimaxKeys extends Activity {
         private void setWimaxPhone() {
         	if(wimaxPhone != null)
         		return;
-		//grep supersonic /system/build.prop
-		try {
-			File file = new File("/system/build.prop");
-			BufferedReader data = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
-			String line = data.readLine();
-			while(line != null) {
-				if(line.contains("supersonic")) {
-                	tracker.trackEvent("WiMAXCheck", "EVO", null, 0);
-                	tracker.dispatch();
-					wimaxPhone = "supersonic";
-					return;
-				} else if(line.contains("speedy")) {
-            		tracker.trackEvent("WiMAXCheck", "Shift", null, 0);
-            		tracker.dispatch();
-					wimaxPhone = "speedy";
-					return;
-				}
-				line = data.readLine();
-			}
-		} catch (Exception e) {
-			wimaxPhone = null;
-		}
-		wimaxPhone = null;
+        	//grep supersonic /system/build.prop
+        	try {
+        		File file = new File("/system/build.prop");
+        		BufferedReader data = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+        		String line = data.readLine();
+        		while(line != null) {
+        			if(line.contains("supersonic")) {
+        				tracker.trackEvent("WiMAXCheck", "EVO", null, 0);
+        				tracker.dispatch();
+        				wimaxPhone = "supersonic";
+        				return;
+        			} else if(line.contains("speedy")) {
+        				tracker.trackEvent("WiMAXCheck", "Shift", null, 0);
+        				tracker.dispatch();
+        				wimaxPhone = "speedy";
+        				return;
+        			}
+        			line = data.readLine();
+        		}
+        	} catch (Exception e) {
+        		wimaxPhone = null;
+        	}
+        	wimaxPhone = null;
         }
         
         private boolean canSU() {
         	Process process = null;
         	int exitValue = -1;
-		try {
-			process = Runtime.getRuntime().exec("su");
-			DataOutputStream toProcess = new DataOutputStream(process.getOutputStream());
-			toProcess.writeBytes("exec id\n");
-			toProcess.flush();
-			exitValue = process.waitFor();
-		} catch (Exception e) {
-			exitValue = -1;
-		}
-		return exitValue == 0;
-	}					
+        	try {
+        		process = Runtime.getRuntime().exec("su");
+        		DataOutputStream toProcess = new DataOutputStream(process.getOutputStream());
+        		toProcess.writeBytes("exec id\n");
+        		toProcess.flush();
+        		exitValue = process.waitFor();
+        	} catch (Exception e) {
+        		exitValue = -1;
+        	}
+        	return exitValue == 0;
+        }					
 			
         	
         
         private Process catRange(String device, int start, int count) {
-		Process process = null;
-		String cmd = String.format("exec dd if=%s bs=4096 skip=%d count=%d\n", device, start, count);
-		try {
-			process = Runtime.getRuntime().exec("su");
-			DataOutputStream toProcess = new DataOutputStream(process.getOutputStream());
-			toProcess.writeBytes(cmd);
-			toProcess.flush();
-		
-		} catch(Exception e) {
-			Log.e("WimaxKeyCheck", "Exception while trying to run: '" + cmd + "' " + e.getMessage());
-			process = null;
-		}
-		return process;
-	}
+        	Process process = null;
+        	String cmd = String.format("exec dd if=%s bs=4096 skip=%d count=%d\n", device, start, count);
+        	try {
+        		process = Runtime.getRuntime().exec("su");
+        		DataOutputStream toProcess = new DataOutputStream(process.getOutputStream());
+        		toProcess.writeBytes(cmd);
+        		toProcess.flush();
+        	} catch(Exception e) {
+        		Log.e("WimaxKeyCheck", "Exception while trying to run: '" + cmd + "' " + e.getMessage());
+        		process = null;
+        	}
+        	return process;
+        }
  
-    /** thanks birbeck */
+        /** thanks birbeck */
         private void parseCheckResult(String result) {
-        /** EditText text = (EditText)findViewById(R.id.FinalResults); */
+        	/** EditText text = (EditText)findViewById(R.id.FinalResults); */
  
- 		if("found".equals(result)) {
+        	if("found".equals(result)) {
  				tracker.trackEvent("WiMAXResults", "RSAKeyPresent", null, 0);
                 finalResults.setTextColor(getResources().getColor(R.color.success_text));
                 wimaxRSAButton.setTextColor(getResources().getColor(R.color.success_button));
                 finalResults.setText(getString(R.string.WiMAXKeyPresent));
                 showToast(getString(R.string.WiMAXKeyPresent));
- 		} else if("not found".equals(result)) {
+        	} else if("not found".equals(result)) {
  				tracker.trackEvent("WiMAXResults", "RSAKeyMissing", null, 0);
  				finalResults.setTextColor(getResources().getColor(R.color.fail_text));
  				wimaxRSAButton.setTextColor(getResources().getColor(R.color.fail_button));
  				finalResults.setText(getString(R.string.WiMAXKeyMissing));
  				showToast(getString(R.string.WiMAXKeyMissing));
- 		} else {
+        	} else {
  				tracker.trackEvent("WiMAXResults", "Error", null, 0);
  				finalResults.setTextColor(getResources().getColor(R.color.fail_text));
  				wimaxRSAButton.setTextColor(getResources().getColor(R.color.fail_button));
  				tracker.trackEvent("WiMAXResults", "NoWiMAXPartition", null, 0);
  				finalResults.setText(getString(R.string.noWiMAXPartition));
  				showToast(getString(R.string.noWiMAXPartition));
- 		}
- 		tracker.dispatch();
-		enableButtons();
+        	}
+        	tracker.dispatch();
+        	enableButtons();
         } 
  
         
-    /** setGravity adjustments - http://3.ly/sP6b */
+        /** setGravity adjustments - http://3.ly/sP6b */
         public void showToast(String toast) {
         /** Toast.makeText(WimaxKeys.this, toast, Toast.LENGTH_SHORT).show(); */
  
@@ -348,7 +347,7 @@ public class WimaxKeys extends Activity {
         }
  
         
-    /** thanks birbeck */
+        /** thanks birbeck */
         @Override
         public void onDestroy() {
                 super.onDestroy();
@@ -359,7 +358,7 @@ public class WimaxKeys extends Activity {
         }
  
 
-    /** thanks birbeck */
+        /** thanks birbeck */
         class WiMaxCheckTask extends AsyncTask<Void, Void, String> {
  
                 ProgressDialog mDialog = new ProgressDialog(WimaxKeys.this);
