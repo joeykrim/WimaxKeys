@@ -325,6 +325,7 @@ public class WimaxKeys extends Activity {
  				finalResults.setText(getString(R.string.WiMAXKeyMissing));
  				showToast(getString(R.string.WiMAXKeyMissing));
  		} else {
+ 				tracker.trackEvent("WiMAXResults", "Error", null, 0);
  				finalResults.setTextColor(getResources().getColor(R.color.fail_text));
  				wimaxRSAButton.setTextColor(getResources().getColor(R.color.fail_button));
  				tracker.trackEvent("WiMAXResults", "NoWiMAXPartition", null, 0);
@@ -415,6 +416,9 @@ public class WimaxKeys extends Activity {
                 						start = start--;
                 						continue;
                 					} else {
+                						if (String.valueOf(start) != null) { tracker.trackEvent("WiMAXKeyStart", String.valueOf(start), null, 0); }
+                						if (String.valueOf(count) != null) { tracker.trackEvent("WiMAXKeyCount", String.valueOf(count), null, 0); }
+                						tracker.dispatch();
                 						return "found";
                 					}
                 				}
