@@ -37,6 +37,7 @@ public class WimaxKeys extends Activity {
         private Button wimaxRSAButton;
         private Button authorButton;
         private TextView finalResults;
+        private boolean rootCheck;
         private String wimaxPhone = null;
         public static final String PREFS_NAME = "PrefFile";
         private boolean disAccepted;
@@ -76,7 +77,7 @@ public class WimaxKeys extends Activity {
                         public void onClick(View v) {
                                 tracker.trackEvent("ButtonClicked", "RootCheck", null, 0);
                                 disableButtons();
-                                boolean rootCheck = canSU();
+                                rootCheck = canSU();
                                 if (rootCheck == true) {
                                         finalResults.setTextColor(getResources().getColor(R.color.success_text));
                                         rootButton.setTextColor(getResources().getColor(R.color.success_button));
@@ -101,18 +102,26 @@ public class WimaxKeys extends Activity {
                         public void onClick(View v) {
                                 tracker.trackEvent("ButtonClicked", "WiMAXCheck", null, 0);
                                 disableButtons();
-                                setWimaxPhone();
-                                if(!"supersonic".equals(wimaxPhone) && !"speedy".equals(wimaxPhone)) {
+                                if(rootCheck || canSU()) {
+                                	setWimaxPhone();
+                                	if(!"supersonic".equals(wimaxPhone) && !"speedy".equals(wimaxPhone)) {
                                 		tracker.trackEvent("WiMAXCheck", "Not Compatible", null, 0);
                                 		finalResults.setTextColor(getResources().getColor(R.color.fail_text));
                                 		wimaxRSAButton.setTextColor(getResources().getColor(R.color.fail_button));
                                 		finalResults.setText(getString(R.string.notCompatible));
                                 		showToast(getString(R.string.notCompatible));
-                                		enableButtons();
                                 		tracker.dispatch();
                                 		return;
+                                	}
+                                	mTask = new WiMaxCheckTask().execute();
+                                } else {
+                                    finalResults.setTextColor(getResources().getColor(R.color.fail_text));
+                                    rootButton.setTextColor(getResources().getColor(R.color.fail_button));
+                                    finalResults.setText(getString(R.string.rootFail));
+                                    showToast(getString(R.string.rootFail));
+                                    tracker.trackEvent("RootResult", "Fail", null, 0);
                                 }
-                                mTask = new WiMaxCheckTask().execute();
+                        		enableButtons();
                         }
                 } );
  
