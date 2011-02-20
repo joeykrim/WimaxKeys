@@ -3,7 +3,7 @@
     <string name="Welcome">Check for your RSA encrypted WiMAX Keys!</string>
     <string name="app_name">WiMAX RSA Key Checker</string>
     <string name="warning">Warning</string>
-    <string name="warningMsg">Due to the large size of the WiMAX partition, the key checking process can take up to 45 seconds.</string>
+    <string name="warningMsg">Root permissions are required to access the WiMAX partition.  If root access is not available, an error message will be given. \nDue to the large size of the WiMAX partition, the key checking process can take up to 45 seconds but should only take 2-3 seconds.</string>
     <string name="verifyWimaxRSA">Verify WiMAX RSA Key</string>
     <string name="results">Results: </string>
     <string name="authorName">by joeykrim</string>
