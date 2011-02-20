@@ -41,6 +41,7 @@ public class WimaxKeys extends Activity {
         private boolean disAccepted;
         static final int DIALOG_DISCLAIMER_ID = 0;
         static final int DIALOG_ABOUT_ID = 1;
+        static final double CURRENT_VERSION_ID = 2.4;
 
         GoogleAnalyticsTracker tracker;
 
@@ -57,7 +58,7 @@ public class WimaxKeys extends Activity {
  
                 /** Thanks AntiSocial!
                  * http://developer.android.com/reference/android/os/Build.html */ 
-                tracker.trackEvent("LocalAppVersion", "2.3", null, 0);
+                tracker.trackEvent("LocalAppVersion", String.valueOf(CURRENT_VERSION_ID), null, 0);
  
                 if (Build.MANUFACTURER != null) { tracker.trackEvent("SystemData", Build.MANUFACTURER, null, 0); } 
                 if (Build.BRAND != null) { tracker.trackEvent("SystemData", Build.BRAND, null, 0); }
@@ -199,7 +200,7 @@ public class WimaxKeys extends Activity {
                                 //break;
                         case DIALOG_ABOUT_ID:
                                 AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
-                                builder1.setMessage(getString(R.string.versionInfo) + System.getProperty("line.separator") + getString(R.string.aboutMsg)) .setCancelable(false) .setTitle(R.string.menuAbout) .setPositiveButton(R.string.menuAboutOkay, new DialogInterface.OnClickListener() {
+                                builder1.setMessage(getString(R.string.versionInfo, CURRENT_VERSION_ID) + System.getProperty("line.separator") + getString(R.string.aboutMsg)) .setCancelable(false) .setTitle(R.string.menuAbout) .setPositiveButton(R.string.menuAboutOkay, new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int id) { }
                                 } );
                                 AlertDialog alert1 = builder1.create();
