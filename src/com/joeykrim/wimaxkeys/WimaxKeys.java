@@ -38,92 +38,92 @@ import java.lang.reflect.Method;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
 public class WimaxKeys extends Activity {
- 
-        private Button rootButton;
-        private Button wimaxButton;
-        private Button wimaxVerifyButton;
-        private Button authorButton;
-        private TextView finalResults;
-        private String wimaxPhone = null;
-        public static final String PREFS_NAME = "PrefFile";
-        private boolean disAccepted;
-        static final int DIALOG_DISCLAIMER_ID = 0;
-        static final int DIALOG_ABOUT_ID = 1;
-        private static final int WIMAX_UNKNOWN = -1;
-        private static final int WIMAX_DISABLING = 0;
-        private static final int WIMAX_DISABLED = 1;
-        private static final int WIMAX_ENABLING = 2;
-        private static final int WIMAX_ENABLED = 3;
-        private WimaxKeys me;
 
-        GoogleAnalyticsTracker tracker;
+	private Button rootButton;
+	private Button wimaxButton;
+	private Button wimaxVerifyButton;
+	private Button authorButton;
+	private TextView finalResults;
+	private String wimaxPhone = null;
+	public static final String PREFS_NAME = "PrefFile";
+	private boolean disAccepted;
+	static final int DIALOG_DISCLAIMER_ID = 0;
+	static final int DIALOG_ABOUT_ID = 1;
+	private static final int WIMAX_UNKNOWN = -1;
+	private static final int WIMAX_DISABLING = 0;
+	private static final int WIMAX_DISABLED = 1;
+	private static final int WIMAX_ENABLING = 2;
+	private static final int WIMAX_ENABLED = 3;
+	private WimaxKeys me;
 
-        AsyncTask mTask = null;
+	GoogleAnalyticsTracker tracker;
 
-    	/** Called when the activity is first created. */
-        @Override
-        public void onCreate(Bundle savedInstanceState) {
-                super.onCreate(savedInstanceState);
-                setContentView(R.layout.main);
- 
-                tracker = GoogleAnalyticsTracker.getInstance();
-                tracker.start("", this);
-                me = this;
- 
+	AsyncTask mTask = null;
+
+	/** Called when the activity is first created. */
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.main);
+
+		tracker = GoogleAnalyticsTracker.getInstance();
+		tracker.start("", this);
+		me = this;
+
 		/** Thanks AntiSocial!
 		 * http://developer.android.com/reference/android/os/Build.html */ 
-                tracker.trackEvent("LocalAppVersion", "2.2", null, 0);
- 
-                if (Build.MANUFACTURER != null) { tracker.trackEvent("SystemData", Build.MANUFACTURER, null, 0); } 
-                if (Build.BRAND != null) { tracker.trackEvent("SystemData", Build.BRAND, null, 0); }
-                if (Build.PRODUCT != null) { tracker.trackEvent("SystemData", Build.PRODUCT, null, 0); }
-                if (Build.MODEL != null) { tracker.trackEvent("SystemData", Build.MODEL, null, 0); }
-                if (Build.VERSION.RELEASE != null) { tracker.trackEvent("SystemData", Build.VERSION.RELEASE, null, 0); }
-                if (String.valueOf(Build.VERSION.SDK_INT) != null) { tracker.trackEvent("SystemData", String.valueOf(Build.VERSION.SDK_INT), null, 0); }
-                tracker.dispatch();
- 
-                finalResults = (TextView) findViewById(R.id.FinalResults);
+		tracker.trackEvent("LocalAppVersion", "2.2", null, 0);
 
-                rootButton = (Button) findViewById(R.id.rootButton);
- 
-                rootButton.setOnClickListener(new View.OnClickListener() {
-                        public void onClick(View v) {
-                                tracker.trackEvent("ButtonClicked", "RootCheck", null, 0);
-                                disableButtons();
-                                boolean rootCheck = canSU();
-                                if (rootCheck == true) {
-                                        finalResults.setTextColor(getResources().getColor(R.color.success_text));
-                                        rootButton.setTextColor(getResources().getColor(R.color.success_button));
-                                        finalResults.setText(getString(R.string.rootSuccess));
-                                        showToast(getString(R.string.rootSuccess));
-                                        tracker.trackEvent("RootResult", "Success", null, 0);
-                                } else {
-                                        finalResults.setTextColor(getResources().getColor(R.color.fail_text));
-                                        rootButton.setTextColor(getResources().getColor(R.color.fail_button));
-                                        finalResults.setText(getString(R.string.rootFail));
-                                        showToast(getString(R.string.rootFail));
-                                        tracker.trackEvent("RootResult", "Fail", null, 0);
-                                }
-                                enableButtons();
-                                tracker.dispatch();
-                        }
-                } );
- 
-                wimaxButton = (Button) findViewById(R.id.wimaxButton);
- 
-                wimaxButton.setOnClickListener(new View.OnClickListener() {
-                        public void onClick(View v) {
-                                tracker.trackEvent("ButtonClicked", "WiMAXCheck", null, 0);
-                                disableButtons();
-                                setWimaxPhone();
-                                if("supersonic".equals(wimaxPhone)) {
-	                                tracker.trackEvent("WiMAXCheck", "EVO", null, 0);
-	                                tracker.dispatch();
-	                        } else if("speedy".equals(wimaxPhone)) {
-	                        	tracker.trackEvent("WiMAXCheck", "Shift", null, 0);
-	                        	tracker.dispatch();
-	                        } else {
-	                        	tracker.trackEvent("WiMAXCheck", "Not Compatible", null, 0);
+		if (Build.MANUFACTURER != null) { tracker.trackEvent("SystemData", Build.MANUFACTURER, null, 0); } 
+		if (Build.BRAND != null) { tracker.trackEvent("SystemData", Build.BRAND, null, 0); }
+		if (Build.PRODUCT != null) { tracker.trackEvent("SystemData", Build.PRODUCT, null, 0); }
+		if (Build.MODEL != null) { tracker.trackEvent("SystemData", Build.MODEL, null, 0); }
+		if (Build.VERSION.RELEASE != null) { tracker.trackEvent("SystemData", Build.VERSION.RELEASE, null, 0); }
+		if (String.valueOf(Build.VERSION.SDK_INT) != null) { tracker.trackEvent("SystemData", String.valueOf(Build.VERSION.SDK_INT), null, 0); }
+		tracker.dispatch();
+
+		finalResults = (TextView) findViewById(R.id.FinalResults);
+
+		rootButton = (Button) findViewById(R.id.rootButton);
+
+		rootButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				tracker.trackEvent("ButtonClicked", "RootCheck", null, 0);
+				disableButtons();
+				boolean rootCheck = canSU();
+				if (rootCheck == true) {
+					finalResults.setTextColor(getResources().getColor(R.color.success_text));
+					rootButton.setTextColor(getResources().getColor(R.color.success_button));
+					finalResults.setText(getString(R.string.rootSuccess));
+					showToast(getString(R.string.rootSuccess));
+					tracker.trackEvent("RootResult", "Success", null, 0);
+				} else {
+					finalResults.setTextColor(getResources().getColor(R.color.fail_text));
+					rootButton.setTextColor(getResources().getColor(R.color.fail_button));
+					finalResults.setText(getString(R.string.rootFail));
+					showToast(getString(R.string.rootFail));
+					tracker.trackEvent("RootResult", "Fail", null, 0);
+				}
+				enableButtons();
+				tracker.dispatch();
+			}
+		} );
+
+		wimaxButton = (Button) findViewById(R.id.wimaxButton);
+
+		wimaxButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				tracker.trackEvent("ButtonClicked", "WiMAXCheck", null, 0);
+				disableButtons();
+				setWimaxPhone();
+				if("supersonic".equals(wimaxPhone)) {
+					tracker.trackEvent("WiMAXCheck", "EVO", null, 0);
+					tracker.dispatch();
+				} else if("speedy".equals(wimaxPhone)) {
+					tracker.trackEvent("WiMAXCheck", "Shift", null, 0);
+					tracker.dispatch();
+				} else {
+					tracker.trackEvent("WiMAXCheck", "Not Compatible", null, 0);
 					finalResults.setTextColor(getResources().getColor(R.color.fail_text));
 					wimaxButton.setTextColor(getResources().getColor(R.color.fail_button));
 					finalResults.setText(getString(R.string.notCompatible));
@@ -131,28 +131,28 @@ public class WimaxKeys extends Activity {
 					enableButtons();
 					tracker.dispatch();
 					return;
-                                }
-                                mTask = new WiMaxCheckTask().execute();
-                        }
-                } );
-                
-                
-                wimaxVerifyButton = (Button) findViewById(R.id.wimaxVerifyButton);
- 
-                wimaxVerifyButton.setOnClickListener(new View.OnClickListener() {
-                        public void onClick(View v) {
-                                tracker.trackEvent("ButtonClicked", "WiMAXVerify", null, 0);
-                                disableButtons();
-                                setWimaxPhone();
-                                
-                                if("supersonic".equals(wimaxPhone)) {
-	                                tracker.trackEvent("WiMAXVerify", "EVO", null, 0);
-	                                tracker.dispatch();
-	                        } else if("speedy".equals(wimaxPhone)) {
-	                        	tracker.trackEvent("WiMAXVerify", "Shift", null, 0);
-	                        	tracker.dispatch();
-	                        } else {
-		                        tracker.trackEvent("WiMAXVerify", "Not Compatible", null, 0);
+				}
+				mTask = new WiMaxCheckTask().execute();
+			}
+		} );
+
+
+		wimaxVerifyButton = (Button) findViewById(R.id.wimaxVerifyButton);
+
+		wimaxVerifyButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				tracker.trackEvent("ButtonClicked", "WiMAXVerify", null, 0);
+				disableButtons();
+				setWimaxPhone();
+
+				if("supersonic".equals(wimaxPhone)) {
+					tracker.trackEvent("WiMAXVerify", "EVO", null, 0);
+					tracker.dispatch();
+				} else if("speedy".equals(wimaxPhone)) {
+					tracker.trackEvent("WiMAXVerify", "Shift", null, 0);
+					tracker.dispatch();
+				} else {
+					tracker.trackEvent("WiMAXVerify", "Not Compatible", null, 0);
 					finalResults.setTextColor(getResources().getColor(R.color.fail_text));
 					wimaxVerifyButton.setTextColor(getResources().getColor(R.color.fail_button));
 					finalResults.setText(getString(R.string.notCompatible));
@@ -160,147 +160,140 @@ public class WimaxKeys extends Activity {
 					enableButtons();
 					tracker.dispatch();
 					return;
-        			}
-        			mTask = new WiMaxValidateTask().execute();
-                        }
-                } );
- 
-                authorButton = (Button) findViewById(R.id.authorButton);
- 
-        /** thanks AntiSociaL */
-                authorButton.setOnClickListener(new View.OnClickListener() {
-                        public void onClick(View v) {
-                                tracker.trackEvent("ButtonClicked", "AuthorWebSite", null, 0);
-                                tracker.dispatch();
-                                String url = "http://www.joeyconway.com";
-                /** Intent i = new Intent(Intent.ACTION_VIEW);
-                 * i.setData(Uri.parse(url)); */ 
-                                Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                                startActivity(i);
-                        }
-                } );
-                TextView credits = (TextView) findViewById(R.id.Credits);
-                credits.setMovementMethod(LinkMovementMethod.getInstance());
-        /** http://developer.android.com/guide/topics/data/data-storage.html#pref */
-                SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-                disAccepted = settings.getBoolean("disclaimerAccepted", false);
-                if (! disAccepted) { showDialog(DIALOG_DISCLAIMER_ID); }
-        }
- 
- 
- 	private void disableButtons() {
- 		rootButton.setEnabled(false);
+				}
+				mTask = new WiMaxValidateTask().execute();
+			}
+		} );
+
+		authorButton = (Button) findViewById(R.id.authorButton);
+
+		/** thanks AntiSociaL */
+		authorButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				tracker.trackEvent("ButtonClicked", "AuthorWebSite", null, 0);
+				tracker.dispatch();
+				String url = "http://www.joeyconway.com";
+		/** Intent i = new Intent(Intent.ACTION_VIEW);
+		 * i.setData(Uri.parse(url)); */ 
+				Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+				startActivity(i);
+			}
+		} );
+		TextView credits = (TextView) findViewById(R.id.Credits);
+		credits.setMovementMethod(LinkMovementMethod.getInstance());
+		/** http://developer.android.com/guide/topics/data/data-storage.html#pref */
+		SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+		disAccepted = settings.getBoolean("disclaimerAccepted", false);
+		if (! disAccepted) { showDialog(DIALOG_DISCLAIMER_ID); }
+	}
+
+	private void disableButtons() {
+		rootButton.setEnabled(false);
 		wimaxButton.setEnabled(false);
 		wimaxVerifyButton.setEnabled(false);
- 	}
- 	
- 	private void enableButtons() {
-	 	rootButton.setEnabled(true);
+	}
+
+	private void enableButtons() {
+		rootButton.setEnabled(true);
 		wimaxButton.setEnabled(true);
 		wimaxVerifyButton.setEnabled(true);
- 	}
- 
- 	
-    /** http://developer.android.com/guide/topics/ui/menus.html */
-        @Override
-        public boolean onCreateOptionsMenu(Menu menu) {
-                MenuInflater inflater = getMenuInflater();
-                inflater.inflate(R.menu.options, menu);
-                return true;
-        }
- 
- 
- 
-        @Override
-        public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
-                switch (item.getItemId()) {
-                        case R.id.menuAbout:
-                                tracker.trackEvent("MenuItemSelected", "AboutDialog", null, 0);
-                                showDialog(1);
-                                tracker.dispatch();
-                                return true;
-                        case R.id.menuDisclaimer:
-                                tracker.trackEvent("MenuItemSelected", "DisclaimerDialog", null, 0);
-                                showDialog(DIALOG_DISCLAIMER_ID);
-                                return true;
-                        case R.id.menuExit:
-                                tracker.trackEvent("MenuItemSelected", "menuExit", null, 0);
-                                tracker.dispatch();
-                                tracker.stop();
-                                finish();
-                                return true;
-                        default:
-                                return super.onOptionsItemSelected(item);
-                }
-        }
- 
-        
-    /** http://www.monkeycancode.com/android-show-a-legal-agreement-dialog-before-program-launches */
-        @Override
-        protected Dialog onCreateDialog(int id) {
-                Dialog dialog;
-                switch (id) {
-                        case DIALOG_DISCLAIMER_ID:
-                                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                                builder.setMessage(R.string.disclaimerMessage) .setCancelable(false) .setTitle(R.string.menuDisclaimer) .setPositiveButton(R.string.disclaimerAgree, new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                                if (! disAccepted) {
-                                                        tracker.trackEvent("DisclaimerDialog", "DisclaimerAgree", null, 0);
-                                                        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-                                                        SharedPreferences.Editor editor = settings.edit();
-                                                        editor.putBoolean("disclaimerAccepted", true);
-                                                        editor.commit();
-                                                        tracker.dispatch();
-                                                }
-                                        }
-                                } ) .setNegativeButton(R.string.disclaimerDisagree, new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                                tracker.trackEvent("DisclaimerDialog", "DisclaimerDisagree", null, 0);
-                                                tracker.dispatch();
-                                                tracker.stop();
-                                                finish();
-                                        }
-                                } );
-                                AlertDialog alert = builder.create();
-                                return alert;
-                //break;
-                        case DIALOG_ABOUT_ID:
-                                AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
-                                builder1.setMessage(getString(R.string.versionInfo) + System.getProperty("line.separator") + getString(R.string.aboutMsg)) .setCancelable(false) .setTitle(R.string.menuAbout) .setPositiveButton(R.string.menuAboutOkay, new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) { }
-                                } );
-                                AlertDialog alert1 = builder1.create();
-                                return alert1;
-                //break;
-                        default:
-                                dialog = null;
-                }
-                return dialog;
-        }
- 
- 
-    /** thanks slushpupie */
-        @Override
-        public void onSaveInstanceState(Bundle savedInstanceState) {
-                super.onSaveInstanceState(savedInstanceState);
-                savedInstanceState.putString("finalResults", finalResults.getText().toString());
-        }
- 
-        
-    /** thanks slushpupie */
-        @Override
-        public void onRestoreInstanceState(Bundle savedInstanceState) {
-                super.onRestoreInstanceState(savedInstanceState);
-                String finalResultsText = savedInstanceState.getString("finalResults");
-                if (finalResultsText != null) {
-                        finalResults.setText(finalResultsText);
-                }
-        }
-        
-        private void setWimaxPhone() {
-        	if(wimaxPhone != null)
-        		return;
+	}
+
+	/** http://developer.android.com/guide/topics/ui/menus.html */
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.options, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Handle item selection
+		switch (item.getItemId()) {
+			case R.id.menuAbout:
+				tracker.trackEvent("MenuItemSelected", "AboutDialog", null, 0);
+				showDialog(1);
+				tracker.dispatch();
+				return true;
+			case R.id.menuDisclaimer:
+				tracker.trackEvent("MenuItemSelected", "DisclaimerDialog", null, 0);
+				showDialog(DIALOG_DISCLAIMER_ID);
+				return true;
+			case R.id.menuExit:
+				tracker.trackEvent("MenuItemSelected", "menuExit", null, 0);
+				tracker.dispatch();
+				tracker.stop();
+				finish();
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
+		}
+	}
+
+	/** http://www.monkeycancode.com/android-show-a-legal-agreement-dialog-before-program-launches */
+	@Override
+	protected Dialog onCreateDialog(int id) {
+		Dialog dialog;
+		switch (id) {
+			case DIALOG_DISCLAIMER_ID:
+				AlertDialog.Builder builder = new AlertDialog.Builder(this);
+				builder.setMessage(R.string.disclaimerMessage) .setCancelable(false) .setTitle(R.string.menuDisclaimer) .setPositiveButton(R.string.disclaimerAgree, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						if (! disAccepted) {
+							tracker.trackEvent("DisclaimerDialog", "DisclaimerAgree", null, 0);
+							SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+							SharedPreferences.Editor editor = settings.edit();
+							editor.putBoolean("disclaimerAccepted", true);
+							editor.commit();
+							tracker.dispatch();
+						}
+					}
+				} ) .setNegativeButton(R.string.disclaimerDisagree, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						tracker.trackEvent("DisclaimerDialog", "DisclaimerDisagree", null, 0);
+						tracker.dispatch();
+						tracker.stop();
+						finish();
+					}
+				} );
+				AlertDialog alert = builder.create();
+				return alert;
+				//break;
+			case DIALOG_ABOUT_ID:
+				AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
+				builder1.setMessage(getString(R.string.versionInfo) + System.getProperty("line.separator") + getString(R.string.aboutMsg)) .setCancelable(false) .setTitle(R.string.menuAbout) .setPositiveButton(R.string.menuAboutOkay, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) { }
+				} );
+				AlertDialog alert1 = builder1.create();
+				return alert1;
+				//break;
+			default:
+				dialog = null;
+		}
+		return dialog;
+	}
+
+	/** thanks slushpupie */
+	@Override
+	public void onSaveInstanceState(Bundle savedInstanceState) {
+		super.onSaveInstanceState(savedInstanceState);
+		savedInstanceState.putString("finalResults", finalResults.getText().toString());
+	}
+
+	/** thanks slushpupie */
+	@Override
+	public void onRestoreInstanceState(Bundle savedInstanceState) {
+		super.onRestoreInstanceState(savedInstanceState);
+		String finalResultsText = savedInstanceState.getString("finalResults");
+		if (finalResultsText != null) {
+			finalResults.setText(finalResultsText);
+		}
+	}
+
+	private void setWimaxPhone() {
+		if(wimaxPhone != null)
+			return;
 		//grep supersonic /system/build.prop
 		try {
 			File file = new File("/system/build.prop");
@@ -321,11 +314,11 @@ public class WimaxKeys extends Activity {
 			wimaxPhone = null;
 		}
 		wimaxPhone = null;
-        }
-        
-        private boolean canSU() {
-        	Process process = null;
-        	int exitValue = -1;
+	}
+
+	private boolean canSU() {
+		Process process = null;
+		int exitValue = -1;
 		try {
 			process = Runtime.getRuntime().exec("su");
 			DataOutputStream toProcess = new DataOutputStream(process.getOutputStream());
@@ -337,10 +330,8 @@ public class WimaxKeys extends Activity {
 		}
 		return exitValue == 0;
 	}					
-			
-        	
-        
-        private Process catRange(String device, int start, int count) {
+
+	private Process catRange(String device, int start, int count) {
 		Process process = null;
 		String cmd = String.format("exec dd if=%s bs=4096 skip=%d count=%d\n", device, start, count);
 		try {
@@ -348,154 +339,152 @@ public class WimaxKeys extends Activity {
 			DataOutputStream toProcess = new DataOutputStream(process.getOutputStream());
 			toProcess.writeBytes(cmd);
 			toProcess.flush();
-		
+
 		} catch(Exception e) {
 			Log.e("WimaxKeyCheck", "Exception while trying to run: '" + cmd + "' " + e.getMessage());
 			process = null;
 		}
 		return process;
 	}
-	
+
 	private static int getWimaxState(Context context) {
-                int state = 0;
-                
-                try {
-                        Object wimaxManager = context.getSystemService("wimax");
-                        Method getWimaxState = wimaxManager.getClass().getMethod("getWimaxState", (Class[]) null);
-                        state = (Integer) getWimaxState.invoke(wimaxManager, (Object[]) null);
-                }
-                catch (Exception e) {
-                        Log.e("WimaxKeyCheck", "Error getting wimax state", e);
-                        state = WIMAX_UNKNOWN;
-                }
-                
-                return state;
-                
-        }
- 
+		int state = 0;
+
+		try {
+			Object wimaxManager = context.getSystemService("wimax");
+			Method getWimaxState = wimaxManager.getClass().getMethod("getWimaxState", (Class[]) null);
+			state = (Integer) getWimaxState.invoke(wimaxManager, (Object[]) null);
+		}
+		catch (Exception e) {
+			Log.e("WimaxKeyCheck", "Error getting wimax state", e);
+			state = WIMAX_UNKNOWN;
+		}
+
+		return state;
+
+	}
+
 	private void setWimaxEnabled(Context context, boolean enabled) {
-                int wimaxState = getWimaxState(context);
-                        
-                try {
-                        Object wimaxManager = context.getSystemService("wimax");
-                        Method setWimaxEnabled = wimaxManager.getClass().getMethod("setWimaxEnabled", new Class[] { Boolean.TYPE });
-                        
-                        if (enabled) {
-                                setWimaxEnabled.invoke(wimaxManager, new Object[] { Boolean.TRUE });
-                        } else {
-                                setWimaxEnabled.invoke(wimaxManager, new Object[] { Boolean.FALSE });
-                        }
-                }
-                catch (Exception e) {
-                        Log.e("WimaxKeyCheck", "could not toggle wimax state", e);
-                        return;
-                }
-        }
- 
-    /** thanks birbeck */
-        private void parseCheckResult(String result) {
-        /** EditText text = (EditText)findViewById(R.id.FinalResults); */
- 
- 		if("found".equals(result)) {
- 			tracker.trackEvent("WiMAXResults", "RSAKeyPresent", null, 0);
-                        finalResults.setTextColor(getResources().getColor(R.color.success_text));
-                        wimaxButton.setTextColor(getResources().getColor(R.color.success_button));
-                        finalResults.setText(getString(R.string.WiMAXKeyPresent));
-                        showToast(getString(R.string.WiMAXKeyPresent));
- 		} else if("not found".equals(result)) {
- 			tracker.trackEvent("WiMAXResults", "RSAKeyMissing", null, 0);
-                        finalResults.setTextColor(getResources().getColor(R.color.fail_text));
-                        wimaxButton.setTextColor(getResources().getColor(R.color.fail_button));
-                        finalResults.setText(getString(R.string.WiMAXKeyMissing));
-                        showToast(getString(R.string.WiMAXKeyMissing));
- 		} else {
-                        finalResults.setTextColor(getResources().getColor(R.color.fail_text));
-                        wimaxButton.setTextColor(getResources().getColor(R.color.fail_button));
-                        tracker.trackEvent("WiMAXResults", "NoWiMAXPartition", null, 0);
-                        finalResults.setText(getString(R.string.noWiMAXPartition));
-                        showToast(getString(R.string.noWiMAXPartition));
-                } 
+		int wimaxState = getWimaxState(context);
+
+		try {
+			Object wimaxManager = context.getSystemService("wimax");
+			Method setWimaxEnabled = wimaxManager.getClass().getMethod("setWimaxEnabled", new Class[] { Boolean.TYPE });
+
+			if (enabled) {
+				setWimaxEnabled.invoke(wimaxManager, new Object[] { Boolean.TRUE });
+			} else {
+				setWimaxEnabled.invoke(wimaxManager, new Object[] { Boolean.FALSE });
+			}
+		}
+		catch (Exception e) {
+			Log.e("WimaxKeyCheck", "could not toggle wimax state", e);
+			return;
+		}
+	}
+
+	/** thanks birbeck */
+	private void parseCheckResult(String result) {
+		/** EditText text = (EditText)findViewById(R.id.FinalResults); */
+
+		if("found".equals(result)) {
+			tracker.trackEvent("WiMAXResults", "RSAKeyPresent", null, 0);
+			finalResults.setTextColor(getResources().getColor(R.color.success_text));
+			wimaxButton.setTextColor(getResources().getColor(R.color.success_button));
+			finalResults.setText(getString(R.string.WiMAXKeyPresent));
+			showToast(getString(R.string.WiMAXKeyPresent));
+		} else if("not found".equals(result)) {
+			tracker.trackEvent("WiMAXResults", "RSAKeyMissing", null, 0);
+			finalResults.setTextColor(getResources().getColor(R.color.fail_text));
+			wimaxButton.setTextColor(getResources().getColor(R.color.fail_button));
+			finalResults.setText(getString(R.string.WiMAXKeyMissing));
+			showToast(getString(R.string.WiMAXKeyMissing));
+		} else {
+			finalResults.setTextColor(getResources().getColor(R.color.fail_text));
+			wimaxButton.setTextColor(getResources().getColor(R.color.fail_button));
+			tracker.trackEvent("WiMAXResults", "NoWiMAXPartition", null, 0);
+			finalResults.setText(getString(R.string.noWiMAXPartition));
+			showToast(getString(R.string.noWiMAXPartition));
+		} 
 		enableButtons();
-                tracker.dispatch();
-        } 
-        
-        private void parseVerifyResult(String result) {
-        	
-                if("match".equals(result)) {
-                	tracker.trackEvent("WiMAXResults", "RSACertMatch", null, 0);
-                        finalResults.setTextColor(getResources().getColor(R.color.success_text));
-                        wimaxVerifyButton.setTextColor(getResources().getColor(R.color.success_button));
-                        finalResults.setText(getString(R.string.WiMAXCertMatch));
-                        showToast(getString(R.string.WiMAXCertMatch));
-                } else if("no match".equals(result)) {
-                	tracker.trackEvent("WiMAXResults", "RSACertNoMatch", null, 0);
-                        finalResults.setTextColor(getResources().getColor(R.color.warn_text));
-                        wimaxVerifyButton.setTextColor(getResources().getColor(R.color.warn_button));
-                        finalResults.setText(getString(R.string.WiMAXCertNoMatch));
-                        showToast(getString(R.string.WiMAXCertNoMatch));
-                } else if("no device".equals(result)) {
-                	tracker.trackEvent("WiMAXResults", "RSACertNoDevice", null, 0);
-                        finalResults.setTextColor(getResources().getColor(R.color.warn_text));
-                        wimaxVerifyButton.setTextColor(getResources().getColor(R.color.warn_button));
-                        finalResults.setText(getString(R.string.WiMAXCertNoDevice));
-                        showToast(getString(R.string.WiMAXCertNoDevice));
-                } else {
-        		finalResults.setTextColor(getResources().getColor(R.color.fail_text));
-                        wimaxVerifyButton.setTextColor(getResources().getColor(R.color.fail_button));
-                        tracker.trackEvent("WiMAXResults", "RSACertVerifyError", null, 0);
-                        finalResults.setText(getString(R.string.WiMAXCertError));
-                        showToast(getString(R.string.WiMAXCertError));
-                }
-                tracker.dispatch();
-                enableButtons();
-        }
- 
-        
-    /** setGravity adjustments - http://3.ly/sP6b */
-        public void showToast(String toast) {
-        /** Toast.makeText(WimaxKeys.this, toast, Toast.LENGTH_SHORT).show(); */
- 
-                Toast msg = Toast.makeText(WimaxKeys.this, toast, Toast.LENGTH_SHORT);
-                msg.setGravity(Gravity.CENTER, msg.getXOffset() + 5, msg.getYOffset());
-                msg.show();
-                return;
-        }
- 
-        
-    /** thanks birbeck */
-        @Override
-        public void onDestroy() {
-                super.onDestroy();
-                if (mTask != null) {
-                        mTask.cancel(true);
-                }
-                tracker.dispatch();
-        }
- 
-        class WiMaxValidateTask extends AsyncTask<Void, Void, String> {
-       		ProgressDialog mDialog = new ProgressDialog(WimaxKeys.this);
- 		boolean wimaxEnabled = false;
- 		
-                @Override
-                protected void onPreExecute() {
-                        mDialog.setMessage(getString(R.string.WiMAXKeyCheckMsg));
-                        mDialog.setCancelable(false);
-                        mDialog.show();
-                }
- 
-                @Override
-                protected String doInBackground(Void... params) {
- 
-                        if (wimaxPhone != null) {
- 				String pem = null;
- 				String mac = null;
- 				
- 				Process process = null;
- 				String device = null;
- 				int count = 100;
- 				int start = 2100 - count; //3071 is the end of the file
- 				
- 				if ("supersonic".equals(wimaxPhone)) {
+		tracker.dispatch();
+	} 
+
+	private void parseVerifyResult(String result) {
+
+		if("match".equals(result)) {
+			tracker.trackEvent("WiMAXResults", "RSACertMatch", null, 0);
+			finalResults.setTextColor(getResources().getColor(R.color.success_text));
+			wimaxVerifyButton.setTextColor(getResources().getColor(R.color.success_button));
+			finalResults.setText(getString(R.string.WiMAXCertMatch));
+			showToast(getString(R.string.WiMAXCertMatch));
+		} else if("no match".equals(result)) {
+			tracker.trackEvent("WiMAXResults", "RSACertNoMatch", null, 0);
+			finalResults.setTextColor(getResources().getColor(R.color.warn_text));
+			wimaxVerifyButton.setTextColor(getResources().getColor(R.color.warn_button));
+			finalResults.setText(getString(R.string.WiMAXCertNoMatch));
+			showToast(getString(R.string.WiMAXCertNoMatch));
+		} else if("no device".equals(result)) {
+			tracker.trackEvent("WiMAXResults", "RSACertNoDevice", null, 0);
+			finalResults.setTextColor(getResources().getColor(R.color.warn_text));
+			wimaxVerifyButton.setTextColor(getResources().getColor(R.color.warn_button));
+			finalResults.setText(getString(R.string.WiMAXCertNoDevice));
+			showToast(getString(R.string.WiMAXCertNoDevice));
+		} else {
+			finalResults.setTextColor(getResources().getColor(R.color.fail_text));
+			wimaxVerifyButton.setTextColor(getResources().getColor(R.color.fail_button));
+			tracker.trackEvent("WiMAXResults", "RSACertVerifyError", null, 0);
+			finalResults.setText(getString(R.string.WiMAXCertError));
+			showToast(getString(R.string.WiMAXCertError));
+		}
+		tracker.dispatch();
+		enableButtons();
+	}
+
+	/** setGravity adjustments - http://3.ly/sP6b */
+	public void showToast(String toast) {
+		/** Toast.makeText(WimaxKeys.this, toast, Toast.LENGTH_SHORT).show(); */
+
+		Toast msg = Toast.makeText(WimaxKeys.this, toast, Toast.LENGTH_SHORT);
+		msg.setGravity(Gravity.CENTER, msg.getXOffset() + 5, msg.getYOffset());
+		msg.show();
+		return;
+	}
+
+	/** thanks birbeck */
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		if (mTask != null) {
+			mTask.cancel(true);
+		}
+		tracker.dispatch();
+	}
+
+	class WiMaxValidateTask extends AsyncTask<Void, Void, String> {
+		ProgressDialog mDialog = new ProgressDialog(WimaxKeys.this);
+		boolean wimaxEnabled = false;
+
+		@Override
+		protected void onPreExecute() {
+			mDialog.setMessage(getString(R.string.WiMAXKeyCheckMsg));
+			mDialog.setCancelable(false);
+			mDialog.show();
+		}
+
+		@Override
+		protected String doInBackground(Void... params) {
+
+			if (wimaxPhone != null) {
+				String pem = null;
+				String mac = null;
+
+				Process process = null;
+				String device = null;
+				int count = 100;
+				int start = 2100 - count; //3071 is the end of the file
+
+				if ("supersonic".equals(wimaxPhone)) {
 					device = "/dev/mtd/mtd0ro";
 				} else if("speedy".equals(wimaxPhone)) {
 					device = "/dev/block/mmcblk0p25";
@@ -521,10 +510,10 @@ public class WimaxKeys extends Activity {
 						if(process == null) {
 							return "error";
 						}
-						
+
 						StringBuilder sb = new StringBuilder();
-						
-						
+
+
 						BufferedReader data = new BufferedReader(new InputStreamReader(process.getInputStream()));
 						String line = data.readLine();
 						while (line != null) {
@@ -537,7 +526,7 @@ public class WimaxKeys extends Activity {
 								foundEnd = true;
 								line = line.substring(0,line.indexOf("-----END CERTIFICATE-----")+25);
 							}
-							
+
 							if(foundStart) {
 								sb.append(line).append("\n");
 							}
@@ -547,7 +536,7 @@ public class WimaxKeys extends Activity {
 							}
 							line = data.readLine();
 						}
-						
+
 						if(foundStart && foundEnd) {
 							break;
 						} else {
@@ -560,14 +549,14 @@ public class WimaxKeys extends Activity {
 							}
 						} 
 					}
-					
+
 					if(pem == null || !foundStart || !foundEnd) {
 						//never found the whole certificate
 						return "not found";
 					}
-					
+
 					// Get the MAC address of the wimax0 device
-					
+
 					File file = new File("/sys/class/net/wimax0/address");
 					try {
 						BufferedReader data = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
@@ -576,13 +565,13 @@ public class WimaxKeys extends Activity {
 						return "no device";
 					}
 
-					
+
 					if(mac == null || mac.equals("")) {
 						return "no device";
 					}
-	
-					
-					
+
+
+
 					//skip the header/footer
 					//-----BEGIN CERTIFICATE----- = 27
 					//-----END CERTIFICATE----- = 25
@@ -591,17 +580,17 @@ public class WimaxKeys extends Activity {
 						return "not found";
 					}
 					String b64 = pem.substring(27,pem.length()-25);
-				
+
 					//Decode the PEM certificate to DER
 					ByteArrayInputStream der = new ByteArrayInputStream(Base64.decode(b64));
 					// Get the X509Certificate object from BouncyCastle
 					X509Certificate cert = (X509Certificate) CertificateFactory.getInstance("X.509", "BC").generateCertificate(der);
 					// Get the issuer's DN, and lowercase it
 					String dn = cert.getSubjectX500Principal().getName("RFC2253").toLowerCase();
-				       
+
 					// The cert does not delimit the mac, so remove the :'s
 					mac = mac.toLowerCase().replaceAll(":","");
-					
+
 					//see if the DN has the MAC in it
 					if(dn.contains(mac)) 
 						return "match";
@@ -611,50 +600,50 @@ public class WimaxKeys extends Activity {
 					Log.d("WimaxKeyCheck","error",e);
 					//TODO
 				}
-	                                
-                        }
-                        return "error";
-                }
- 
-                @Override
-                protected void onPostExecute(String result) {
-                	if(!wimaxEnabled) {
+
+			}
+			return "error";
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			if(!wimaxEnabled) {
 				setWimaxEnabled(me,false);
 			}
-                        if (isCancelled()) {
-                                return;
-                        }
- 
-                        if (mDialog != null && mDialog.isShowing()) {
-                                mDialog.dismiss();
-                        }
- 
-                        parseVerifyResult(result);
-                        mTask = null;
-                }
-        }
- 
-    /** thanks birbeck */
-        class WiMaxCheckTask extends AsyncTask<Void, Void, String> {
- 
-                ProgressDialog mDialog = new ProgressDialog(WimaxKeys.this);
- 
-                @Override
-                protected void onPreExecute() {
-                        mDialog.setMessage(getString(R.string.WiMAXKeyCheckMsg));
-                        mDialog.setCancelable(false);
-                        mDialog.show();
-                }
- 
-                @Override
-                protected String doInBackground(Void... params) {
-         	   if (wimaxPhone != null) {
- 				Process process = null;
- 				String device = null;
- 				int count = 100;
- 				int start = 2100 - count; //3071 is the end of the file
- 				
- 				if (wimaxPhone.equals("supersonic")) {
+			if (isCancelled()) {
+				return;
+			}
+
+			if (mDialog != null && mDialog.isShowing()) {
+				mDialog.dismiss();
+			}
+
+			parseVerifyResult(result);
+			mTask = null;
+		}
+	}
+
+	/** thanks birbeck */
+	class WiMaxCheckTask extends AsyncTask<Void, Void, String> {
+
+		ProgressDialog mDialog = new ProgressDialog(WimaxKeys.this);
+
+		@Override
+		protected void onPreExecute() {
+			mDialog.setMessage(getString(R.string.WiMAXKeyCheckMsg));
+			mDialog.setCancelable(false);
+			mDialog.show();
+		}
+
+		@Override
+		protected String doInBackground(Void... params) {
+		if (wimaxPhone != null) {
+				Process process = null;
+				String device = null;
+				int count = 100;
+				int start = 2100 - count; //3071 is the end of the file
+
+				if (wimaxPhone.equals("supersonic")) {
 					device = "/dev/mtd/mtd0ro";
 				} else if(wimaxPhone.equals("speedy")) {
 					device = "/dev/block/mmcblk0p25";
@@ -677,12 +666,12 @@ public class WimaxKeys extends Activity {
 								foundEnd = true;
 								break;
 							}
-							
+
 							line = data.readLine();
 						}
 						if(foundStart || foundEnd) {
 							//our window size cut it off?
-							
+
 							if(foundStart && !foundEnd) {
 								//shouldnt be more than a few blocks
 								count = count++;
@@ -694,7 +683,7 @@ public class WimaxKeys extends Activity {
 								return "found";
 							}
 						}
-						
+
 						start = start - count;
 					}
 					// never found it
@@ -703,24 +692,23 @@ public class WimaxKeys extends Activity {
 					Log.d("WimaxKeyCheck","error",e);
 					//TODO
 				}
-	                                
-                        }
-                        return "error";
-                }
- 
- 
-                @Override
-                protected void onPostExecute(String result) {
-                        if (isCancelled()) {
-                                return;
-                        }
- 
-                        if (mDialog != null && mDialog.isShowing()) {
-                                mDialog.dismiss();
-                        }
- 
-                        parseCheckResult(result);
-                        mTask = null;
-                }
-        }
+
+			}
+			return "error";
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			if (isCancelled()) {
+				return;
+			}
+
+			if (mDialog != null && mDialog.isShowing()) {
+				mDialog.dismiss();
+			}
+
+			parseCheckResult(result);
+			mTask = null;
+		}
+	}
 }

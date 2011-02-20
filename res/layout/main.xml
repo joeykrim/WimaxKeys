@@ -3,13 +3,13 @@
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent">
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:scrollbars="vertical" 
-    android:scrollbarStyle="outsideOverlay" 
-    android:scrollbarAlwaysDrawVerticalTrack="true"
-    android:background="@drawable/backgroundport">
+	android:orientation="vertical"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:scrollbars="vertical" 
+	android:scrollbarStyle="outsideOverlay" 
+	android:scrollbarAlwaysDrawVerticalTrack="true"
+	android:background="@drawable/backgroundport">
 <TextView android:layout_width="fill_parent" 
 	android:layout_height="wrap_content" 
 	android:text="@string/app_name" 
@@ -32,7 +32,7 @@
 	android:id="@+id/WarningMsg"
 	android:textSize="14sp"></TextView>
 <View android:layout_width="fill_parent"
-    android:layout_height="2dip" android:background="#FFFFFFFF" />
+	android:layout_height="2dip" android:background="#FFFFFFFF" />
 <TextView android:text="                                         " 
 	android:id="@+id/Spacer2" 
 	android:layout_width="wrap_content" 
@@ -78,7 +78,7 @@
 	android:textSize="4sp"
 	android:layout_gravity="center"></TextView>
 <View android:layout_width="fill_parent"
-    android:layout_height="2dip" android:background="#FFFFFFFF" />
+	android:layout_height="2dip" android:background="#FFFFFFFF" />
 <TextView android:text="@string/authorName"
 	android:id="@+id/joeykrim" 
 	android:layout_width="wrap_content" 
