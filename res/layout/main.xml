@@ -37,13 +37,8 @@
 	android:id="@+id/Spacer2" 
 	android:layout_width="wrap_content" 
 	android:layout_height="wrap_content"></TextView>
-<Button android:text="@string/verifyRoot"
-	android:id="@+id/rootButton" 
-	android:layout_width="wrap_content" 
-	android:layout_height="wrap_content"
-	android:layout_gravity="center"></Button>
 <Button android:text="@string/verifyWimaxRSA"
-	android:id="@+id/wimaxButton" 
+	android:id="@+id/wimaxRSAButton" 
 	android:layout_width="wrap_content" 
 	android:layout_height="wrap_content"
 	android:layout_gravity="center"></Button>

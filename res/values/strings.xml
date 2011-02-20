@@ -3,15 +3,13 @@
     <string name="Welcome">Check for your RSA encrypted WiMAX Keys!</string>
     <string name="app_name">WiMAX RSA Key Checker</string>
     <string name="warning">Warning</string>
-    <string name="warningMsg">Due to the large size of the WiMAX partition, the key checking process can take up to 45 seconds.</string>
-    <string name="verifyRoot">Verify Root Access</string>
-    <string name="verifyBusybox">Verify Busybox Installed</string>
+    <string name="warningMsg">Root permission is required to access the WiMAX partition.  If no root access is available an error message will be displayed. \nOn a rare occasion, a WiMAX RSA key search could take up to 45 seconds.</string>
     <string name="verifyWimaxRSA">Verify WiMAX RSA Key</string>
     <string name="verifyWimaxCert">Verify WiMAX Certificate</string>
     <string name="results">Results: </string>
     <string name="authorName">by joeykrim</string>
     <string name="authorWebSite">Author Web Site</string>
-    <string name="Credits">Credits: <a href="http://www.appsbybirbeck.com/">birbeck</a>, <a href="http://xpl0.it">AntiSociaL</a>, LouZiffer, <a href="http://www.twitter.com/SHlFT">shift</a>, <a href="http://android.slushpupie.com">slushpupie</a>, thenuge, <a href="http://twitter.com/shinzul">shinzul</a>, <a href="http://forum.xda-developers.com/member.php?u=1561342">toastcfh</a>, <a href="http://www.sdx-developers.com">sdx-developers.com</a>, <a href="http://twitter.com/teamwinandroid">#teamwin</a> and <a href="http://webchat.freenode.net/">#htc-evo</a>!" </string>
+    <string name="Credits">Credits: <a href="http://android.slushpupie.com">slushpupie</a>, <a href="http://www.appsbybirbeck.com/">birbeck</a>, <a href="http://xpl0.it">AntiSociaL</a>, LouZiffer, <a href="http://www.twitter.com/SHlFT">shift</a>, <a href="http://twitter.com/shinzul">shinzul</a>, <a href="http://forum.xda-developers.com/member.php?u=1561342">toastcfh</a>, thenuge, <a href="http://www.sdx-developers.com">sdx-developers.com</a>, <a href="http://twitter.com/teamwinandroid">#teamwin</a> and <a href="http://webchat.freenode.net/">#htc-evo</a>!" </string>
     <string name="menuAbout">About</string> 
     <string name="menuDisclaimer">Disclaimer</string>
     <string name="menuExit">Exit</string>
@@ -20,16 +18,16 @@
     <string name="disclaimerDisagree">Disagree</string>
     <string name="aboutMsg">All those mentioned in the credits have been extremely helpful! \nThanks for using my software! \n\n<a href="http://www.joeyconway.com">http://www.joeyconway.com</a></string>
     <string name="menuAboutOkay">Okay</string>
-    <string name="versionInfo">Version 2.2</string>
+    <string name="versionInfo">Version %s</string>
     <string name="rootSuccess">Congratulations! You have root access!</string>
-    <string name="rootFail">Sorry, you do not have root access.</string>
+    <string name="rootFail">Sorry, you do not have root access. \nRoot access is required to verify WiMAX RSA key.</string>
     <string name="busyboxSuccess">Congratulations! Busybox is installed correctly!</string>
     <string name="busyboxFail">Sorry, you do not have Busybox installed correctly! \nFor proper Busybox installation, please search for the BusyBox app by Stericson in the market!</string>
     <string name="notCompatible">Sorry, this phone does not identify itself as an HTC EVO or an HTC Shift!</string>
     <string name="noWiMAXPartition">No WiMAX partition present at /dev/mtd/mtd0 for the EVO or /dev/block/mmcblk0p25 for the Shift</string>
     <string name="WiMAXCertError">Your WiMAX certificate could not be verified. 4G must be enabled to verify (need not be connected, however)</string>
     <string name="WiMAXKeyMissing">Sorry, your WiMAX RSA key is missing!</string>
-    <string name="WiMAXKeyPresent">Congratulations! Your RSA key is present!</string>
+    <string name="WiMAXKeyPresent">Congratulations! Your HTC %s RSA key is present!</string>
     <string name="WiMAXCertMatch">Congratulations! Your certificate matches your hardware!</string>
     <string name="WiMAXCertNoMatch">Your certificate is present, does not match your hardware. This might be a problem.</string>
     <string name="WiMAXCertNoDevice">Your certificate is present, but without 4G enabled it cannot be verified.</string>
