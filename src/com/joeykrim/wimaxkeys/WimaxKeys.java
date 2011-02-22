@@ -24,7 +24,6 @@ import android.widget.Toast;
 import java.io.ByteArrayInputStream;
 import java.security.cert.X509Certificate;
 import java.security.cert.CertificateFactory;
-import javax.security.auth.x500.X500Principal;
 import android.util.Log;
 import java.io.File;
 import java.io.BufferedReader;
@@ -69,6 +68,7 @@ public class WimaxKeys extends Activity {
 	private static String GAE_DISCLAIMER = "DisclaimerDialog";
 	private static String GAE_WIMAX_CHECK = "WiMAxCheck";
 	private static String GAE_WIMAX_RESULT = "WiMAXResults";
+	private static String GAE_WIMAX_VERIFY = "WiMaxVerify";
 
 	GoogleAnalyticsTracker tracker;
 
@@ -135,18 +135,18 @@ public class WimaxKeys extends Activity {
 
 		wimaxVerifyButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				tracker.trackEvent("ButtonClicked", "WiMAXVerify", null, 0);
+				tracker.trackEvent(GAE_BUTTON, "WiMAXVerify", null, 0);
 				disableButtons();
 				setWimaxPhone();
 
-				if("supersonic".equals(wimaxPhone)) {
-					tracker.trackEvent("WiMAXVerify", "EVO", null, 0);
+				if(PHONE_EVO.equals(wimaxPhone)) {
+					tracker.trackEvent(GAE_WIMAX_VERIFY, PHONE_EVO, null, 0);
 					tracker.dispatch();
-				} else if("speedy".equals(wimaxPhone)) {
-					tracker.trackEvent("WiMAXVerify", "Shift", null, 0);
+				} else if(PHONE_SHIFT.equals(wimaxPhone)) {
+					tracker.trackEvent(GAE_WIMAX_VERIFY, PHONE_SHIFT, null, 0);
 					tracker.dispatch();
 				} else {
-					tracker.trackEvent("WiMAXVerify", "Not Compatible", null, 0);
+					tracker.trackEvent(GAE_WIMAX_VERIFY, "Not Compatible", null, 0);
 					finalResults.setTextColor(getResources().getColor(R.color.fail_text));
 					wimaxVerifyButton.setTextColor(getResources().getColor(R.color.fail_button));
 					finalResults.setText(getString(R.string.notCompatible));
@@ -360,7 +360,6 @@ public class WimaxKeys extends Activity {
 	}
 
 	private void setWimaxEnabled(Context context, boolean enabled) {
-		int wimaxState = getWimaxState(context);
 
 		try {
 			Object wimaxManager = context.getSystemService("wimax");
@@ -592,7 +591,7 @@ public class WimaxKeys extends Activity {
 					else
 						return "no match";
 				} catch (Exception e) {
-					Log.d("WimaxKeyCheck","error",e);
+					Log.d(LOG_TAG,"error",e);
 					//TODO
 				}
 
