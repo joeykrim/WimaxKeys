@@ -43,6 +43,9 @@ public class WimaxKeys extends Activity {
 	private static String LOG_TAG = "WimaxKeyCheck";
 	private static String PHONE_EVO = "EVO";
 	private static String PHONE_SHIFT = "EVO Shift";
+	private static String RESULT_ERROR = "error";
+	private static String REUSLT_FOUND = "found";
+	private static String RESULT_NOT_FOUND = "not found";
 	
 	// Google Analytics Events
 	private static String GAE_APP_VERSION = "LocalAppVersion";
@@ -369,7 +372,7 @@ public class WimaxKeys extends Activity {
 					while (start > 0) {
 						process = catRange(device, start, count);
 						if(process == null) {
-							return "error";
+							return RESULT_ERROR;
 						}
 						BufferedReader data = new BufferedReader(new InputStreamReader(process.getInputStream()));
 						String line = data.readLine();
@@ -400,21 +403,21 @@ public class WimaxKeys extends Activity {
 								if (String.valueOf(start) != null) { tracker.trackEvent("WiMAXKeyStart", String.valueOf(start), null, 0); }
 								if (String.valueOf(count) != null) { tracker.trackEvent("WiMAXKeyCount", String.valueOf(count), null, 0); }
 								tracker.dispatch();
-								return "found";
+								return RESULT_FOUND;
 							}
 						}
 						
 						start = start - count;
 					}
 					//never found it
-					return "not found";
+					return RESULT_NOT_FOUND;
 				} catch (Exception e) {
-					Log.d(LOG_TAG,"error",e);
+					Log.d(LOG_TAG,e);
 					//TODO
 				}
 					
 			}
-			return "error";
+			return RESULT_ERROR;
 		}
 
 		@Override
