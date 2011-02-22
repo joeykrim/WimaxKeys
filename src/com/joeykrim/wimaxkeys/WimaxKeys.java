@@ -63,7 +63,8 @@ public class WimaxKeys extends Activity {
 	private static String RESULT_ERROR = "error";
 	private static String RESULT_KEY_FOUND = "RSAKeyPresent";
 	private static String RESULT_KEY_NOT_FOUND = "not found";
-	private static Strign RESULT_NO_PARTITION = "NoWiMAXPartition";
+	private static String RESULT_CERT_NOT_FOUND = "not found";
+	private static String RESULT_NO_PARTITION = "NoWiMAXPartition";
 	private static String RESULT_NO_DEVICE = "RSACertNoDevice";
 	private static String RESULT_NO_MATCH = "RSACertNoMatch";
 	private static String RESULT_MATCH = "RSACertMatch";
@@ -355,41 +356,6 @@ public class WimaxKeys extends Activity {
 		return process;
 	}
 
-	private static int getWimaxState(Context context) {
-		int state = 0;
-
-		try {
-			Object wimaxManager = context.getSystemService("wimax");
-			Method getWimaxState = wimaxManager.getClass().getMethod("getWimaxState", (Class[]) null);
-			state = (Integer) getWimaxState.invoke(wimaxManager, (Object[]) null);
-		}
-		catch (Exception e) {
-			Log.e(LOG_TAG, "Error getting wimax state", e);
-			state = WIMAX_UNKNOWN;
-		}
-
-		return state;
-
-	}
-
-	private void setWimaxEnabled(Context context, boolean enabled) {
-
-		try {
-			Object wimaxManager = context.getSystemService("wimax");
-			Method setWimaxEnabled = wimaxManager.getClass().getMethod("setWimaxEnabled", new Class[] { Boolean.TYPE });
-
-			if (enabled) {
-				setWimaxEnabled.invoke(wimaxManager, new Object[] { Boolean.TRUE });
-			} else {
-				setWimaxEnabled.invoke(wimaxManager, new Object[] { Boolean.FALSE });
-			}
-		}
-		catch (Exception e) {
-			Log.e(LOG_TAG, "could not toggle wimax state", e);
-			return;
-		}
-	}
-
 	/** thanks birbeck */
 	private void parseCheckResult(String result) {
 		/** EditText text = (EditText)findViewById(R.id.FinalResults); */
@@ -498,17 +464,7 @@ public class WimaxKeys extends Activity {
 				} else {
 					return RESULT_ERROR;
 				}
-				int state = getWimaxState(me);
-				if(state == WIMAX_ENABLED || state == WIMAX_ENABLING) {
-					wimaxEnabled = true;
-				} else {
-					setWimaxEnabled(me,true);
-					synchronized (this) {
-						try {
-							this.wait(5000); //give it time to enable
-						} catch (InterruptedException e) { }
-					}
-				}
+				
 				try {
 					boolean foundStart = false;
 					boolean foundEnd = false;
@@ -559,7 +515,7 @@ public class WimaxKeys extends Activity {
 
 					if(pem == null || !foundStart || !foundEnd) {
 						//never found the whole certificate
-						return RESULT_NOT_FOUND;
+						return RESULT_CERT_NOT_FOUND;
 					}
 
 					// Get the MAC address of the wimax0 device
@@ -584,7 +540,7 @@ public class WimaxKeys extends Activity {
 					//-----END CERTIFICATE----- = 25
 					if(pem.length() < 52) {
 						//we shouldnt be able to get here
-						return RESULT_NOT_FOUND;
+						return RESULT_CERT_NOT_FOUND;
 					}
 					String b64 = pem.substring(27,pem.length()-25);
 
@@ -614,9 +570,7 @@ public class WimaxKeys extends Activity {
 
 		@Override
 		protected void onPostExecute(String result) {
-			if(!wimaxEnabled) {
-				setWimaxEnabled(me,false);
-			}
+			
 			if (isCancelled()) {
 				return;
 			}
