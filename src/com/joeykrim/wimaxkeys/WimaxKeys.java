@@ -1,5 +1,15 @@
 package com.joeykrim.wimaxkeys;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStreamReader;
+import java.security.cert.X509Certificate;
+import java.security.cert.CertificateFactory;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -12,6 +22,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,17 +31,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.io.ByteArrayInputStream;
-import java.security.cert.X509Certificate;
-import java.security.cert.CertificateFactory;
-import android.util.Log;
-import java.io.File;
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
-import java.io.FileNotFoundException;
 
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
@@ -46,7 +46,7 @@ public class WimaxKeys extends Activity {
 	private boolean disAccepted;
 	static final int DIALOG_DISCLAIMER_ID = 0;
 	static final int DIALOG_ABOUT_ID = 1;
-	static final double CURRENT_VERSION_ID = 2.4;
+	static final double CURRENT_VERSION_ID = 2.5;
 	private static String LOG_TAG = "WimaxKeyCheck";
 	private static String PHONE_EVO = "EVO";
 	private static String PHONE_SHIFT = "EVO Shift";
