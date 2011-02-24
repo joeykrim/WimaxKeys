@@ -31,8 +31,6 @@ import java.io.DataOutputStream;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.io.FileNotFoundException;
-import android.content.Context;
-import java.lang.reflect.Method;
 
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
@@ -48,12 +46,6 @@ public class WimaxKeys extends Activity {
 	private boolean disAccepted;
 	static final int DIALOG_DISCLAIMER_ID = 0;
 	static final int DIALOG_ABOUT_ID = 1;
-	private static final int WIMAX_UNKNOWN = -1;
-	private static final int WIMAX_DISABLING = 0;
-	private static final int WIMAX_DISABLED = 1;
-	private static final int WIMAX_ENABLING = 2;
-	private static final int WIMAX_ENABLED = 3;
-	private WimaxKeys me;
 	static final double CURRENT_VERSION_ID = 2.4;
 	private static String LOG_TAG = "WimaxKeyCheck";
 	private static String PHONE_EVO = "EVO";
