@@ -1,5 +1,11 @@
 package com.joeykrim.wimaxkeys;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -12,6 +18,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,13 +27,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import android.util.Log;
-import java.io.File;
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
 
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
