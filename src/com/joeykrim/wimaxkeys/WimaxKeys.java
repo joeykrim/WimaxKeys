@@ -606,7 +606,6 @@ public class WimaxKeys extends Activity {
 				}
 				BufferedReader data = null;
 				try {
-<<<<<<< HEAD
 				    File file = new File(partitionFilename);
 				    data = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
 				    String line = null;
@@ -645,12 +644,6 @@ public class WimaxKeys extends Activity {
 						procWiMAX = catRange(device, count, offset);
 						if(procWiMAX == null) {
 							return "error";
-=======
-					while (start > 0) {
-						process = catRange(device, start, count);
-						if(process == null) {
-							return RESULT_ERROR;
->>>>>>> keyverify
 						}
 						BufferedReader br = new BufferedReader(new InputStreamReader(procWiMAX.getInputStream()));
 						String line = br.readLine();
@@ -664,13 +657,7 @@ public class WimaxKeys extends Activity {
 								foundEnd = true;
 								break;
 							}
-<<<<<<< HEAD
-							
 							line = br.readLine();
-=======
-
-							line = data.readLine();
->>>>>>> keyverify
 						}
 						if(foundStart || foundEnd) {
 							//our window size cut it off?
@@ -683,13 +670,8 @@ public class WimaxKeys extends Activity {
 								count--;
 								continue;
 							} else {
-<<<<<<< HEAD
-								if (String.valueOf(count) != null) { tracker.trackEvent("WiMAXKeyStart", String.valueOf(count), null, 0); }
-								if (String.valueOf(offset) != null) { tracker.trackEvent("WiMAXKeyCount", String.valueOf(offset), null, 0); }
-=======
 								if (String.valueOf(start) != null) { tracker.trackEvent(GAE_WIMAX_KEY_START, String.valueOf(start), null, 0); }
 								if (String.valueOf(count) != null) { tracker.trackEvent(GAE_WIMAX_KEY_COUNT, String.valueOf(count), null, 0); }
->>>>>>> keyverify
 								tracker.dispatch();
 								return RESULT_KEY_FOUND;
 							}
