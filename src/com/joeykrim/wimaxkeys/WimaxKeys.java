@@ -429,10 +429,10 @@ public class WimaxKeys extends Activity {
 							
 							if(foundStart && !foundEnd) {
 								//shouldnt be more than a few blocks
-								offset = offset++;
+								offset++;
 								continue;
 							} else if(!foundStart && foundEnd) {
-								count = count--;
+								count--;
 								continue;
 							} else {
 								if (String.valueOf(count) != null) { tracker.trackEvent("WiMAXKeyStart", String.valueOf(count), null, 0); }
