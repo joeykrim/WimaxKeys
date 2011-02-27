@@ -399,12 +399,13 @@ public class WimaxKeys extends Activity {
 	            }
 
 				Process procWiMAX = null;
-				int count = 100;
-				int start = 2100 - count; //3071 is the end of the file
+				int offset = 100;
+				int start = 2100;
+				int count = start - offset; //3071 is the end of the file
 	            int end = ((partitionSize / 4)-1); //3072 then -1 is 3071
 				try {
-					while (start > 0) {
-						procWiMAX = catRange(device, start, count);
+					while (count > 0) {
+						procWiMAX = catRange(device, count, offset);
 						if(procWiMAX == null) {
 							return "error";
 						}
@@ -428,20 +429,20 @@ public class WimaxKeys extends Activity {
 							
 							if(foundStart && !foundEnd) {
 								//shouldnt be more than a few blocks
-								count = count++;
+								offset = offset++;
 								continue;
 							} else if(!foundStart && foundEnd) {
-								start = start--;
+								count = count--;
 								continue;
 							} else {
-								if (String.valueOf(start) != null) { tracker.trackEvent("WiMAXKeyStart", String.valueOf(start), null, 0); }
-								if (String.valueOf(count) != null) { tracker.trackEvent("WiMAXKeyCount", String.valueOf(count), null, 0); }
+								if (String.valueOf(count) != null) { tracker.trackEvent("WiMAXKeyStart", String.valueOf(count), null, 0); }
+								if (String.valueOf(offset) != null) { tracker.trackEvent("WiMAXKeyCount", String.valueOf(offset), null, 0); }
 								tracker.dispatch();
 								return "found";
 							}
 						}
 						
-						start = start - count;
+						count = count - offset;
 					}
 					//never found it
 					return "not found";
