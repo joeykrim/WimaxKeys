@@ -42,6 +42,7 @@ public class WimaxKeys extends Activity {
 	private Button wimaxVerifyButton;
 	private TextView finalResults;
 	private String wimaxPhone = null;
+	private int startHint = 2100;
 	public static final String PREFS_NAME = "PrefFile";
 	private boolean disAccepted;
 	static final int DIALOG_DISCLAIMER_ID = 0;
@@ -447,7 +448,7 @@ public class WimaxKeys extends Activity {
 				Process process = null;
 				String device = null;
 				int count = 100;
-				int start = 2100 - count; //3071 is the end of the file
+				int start = startHint - count; //3071 is the end of the file
 
 				if ("supersonic".equals(wimaxPhone)) {
 					device = "/dev/mtd/mtd0ro";
@@ -493,6 +494,7 @@ public class WimaxKeys extends Activity {
 						}
 
 						if(foundStart && foundEnd) {
+							startHint = start; //save start as a hint for next run
 							break;
 						} else {
 							if(foundStart) {
@@ -626,24 +628,24 @@ public class WimaxKeys extends Activity {
 				}
 				
 				/* empty major minor blocks name */
-	            String[] fields = partitionReturnLine.split("  *");
-	            try {
-	                partitionSize = Integer.parseInt(fields[3]); 
-	            } catch (NumberFormatException e) {
-	                Log.d(LOG_TAG,"bad field",e);
-	                return "error";
-	            }
+				String[] fields = partitionReturnLine.split("  *");
+				try {
+					partitionSize = Integer.parseInt(fields[3]); 
+				} catch (NumberFormatException e) {
+					Log.d(LOG_TAG,"bad field",e);
+					return RESULT_ERROR;
+				}
 
 				Process procWiMAX = null;
 				int offset = 100;
-				int start = 2100;
+				int start = startHint;
 				int count = start - offset; //3071 is the end of the file
 				int end = ((partitionSize / 4)-1); //3072 then -1 is 3071
 				try {
 					while (count > 0) {
 						procWiMAX = catRange(device, count, offset);
 						if(procWiMAX == null) {
-							return "error";
+							return RESULT_ERROR;
 						}
 						BufferedReader br = new BufferedReader(new InputStreamReader(procWiMAX.getInputStream()));
 						String line = br.readLine();
@@ -670,6 +672,7 @@ public class WimaxKeys extends Activity {
 								count--;
 								continue;
 							} else {
+								startHint = start; //use the start point for next execute
 								if (String.valueOf(start) != null) { tracker.trackEvent(GAE_WIMAX_KEY_START, String.valueOf(start), null, 0); }
 								if (String.valueOf(count) != null) { tracker.trackEvent(GAE_WIMAX_KEY_COUNT, String.valueOf(count), null, 0); }
 								tracker.dispatch();
