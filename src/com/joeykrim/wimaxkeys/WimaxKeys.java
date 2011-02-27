@@ -608,23 +608,23 @@ public class WimaxKeys extends Activity {
 				}
 				BufferedReader data = null;
 				try {
-				    File file = new File(partitionFilename);
-				    data = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
-				    String line = null;
-				    while((line = data.readLine()) != null) {
-				        if(line.contains(partitionSearchValue)) {
-				            partitionReturnLine = line;
-				            break;
-				        }
-				    }
+					File file = new File(partitionFilename);
+					data = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+					String line = null;
+					while((line = data.readLine()) != null) {
+						if(line.contains(partitionSearchValue)) {
+							partitionReturnLine = line;
+							break;
+						}
+					}
 				} catch (Exception e) {
-				    e.printStackTrace();        
+					e.printStackTrace();		
 				} finally {
-				    if (data != null) {
-				        try { 
-				            data.close();
-				        } catch (Exception e) { /* do nothing */ }
-				    }
+					if (data != null) {
+						try { 
+							data.close();
+						} catch (Exception e) { /* do nothing */ }
+					}
 				}
 				
 				/* empty major minor blocks name */
