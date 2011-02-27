@@ -355,24 +355,61 @@ public class WimaxKeys extends Activity {
 		@Override
 		protected String doInBackground(Void... params) {
 			if (wimaxPhone != null) {
-				Process process = null;
 				String device = null;
-				int count = 100;
-				int start = 2100 - count; //3071 is the end of the file
+				String partitionFilename = "/proc/partitions";
+				String partitionSearchValue = null;
+				String partitionReturnLine = null;
+				int partitionSize = 0;
 
 				if (PHONE_EVO.equals(wimaxPhone)) {
 					device = "/dev/mtd/mtd0ro";
+					partitionSearchValue = "mtdblock0";
 				} else if(PHONE_SHIFT.equals(wimaxPhone)) {
 					device = "/dev/block/mmcblk0p25";
+					partitionSearchValue = "mmcblk0p25";
 				}
+				BufferedReader data = null;
+				try {
+				    File file = new File(partitionFilename);
+				    data = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+				    String line = null;
+				    while((line = data.readLine()) != null) {
+				        if(line.contains(partitionSearchValue)) {
+				            partitionReturnLine = line;
+				            break;
+				        }
+				    }
+				} catch (Exception e) {
+				    e.printStackTrace();        
+				} finally {
+				    if (data != null) {
+				        try { 
+				            data.close();
+				        } catch (Exception e) { /* do nothing */ }
+				    }
+				}
+				
+				/* empty major minor blocks name */
+	            String[] fields = partitionReturnLine.split("  *");
+	            try {
+	                partitionSize = Integer.parseInt(fields[3]); 
+	            } catch (NumberFormatException e) {
+	                Log.d(LOG_TAG,"bad field",e);
+	                return "error";
+	            }
+
+				Process procWiMAX = null;
+				int count = 100;
+				int start = 2100 - count; //3071 is the end of the file
+	            int end = ((partitionSize / 4)-1); //3072 then -1 is 3071
 				try {
 					while (start > 0) {
-						process = catRange(device, start, count);
-						if(process == null) {
+						procWiMAX = catRange(device, start, count);
+						if(procWiMAX == null) {
 							return "error";
 						}
-						BufferedReader data = new BufferedReader(new InputStreamReader(process.getInputStream()));
-						String line = data.readLine();
+						BufferedReader br = new BufferedReader(new InputStreamReader(procWiMAX.getInputStream()));
+						String line = br.readLine();
 						boolean foundStart = false;
 						boolean foundEnd = false;
 						while (line != null) {
@@ -384,7 +421,7 @@ public class WimaxKeys extends Activity {
 								break;
 							}
 							
-							line = data.readLine();
+							line = br.readLine();
 						}
 						if(foundStart || foundEnd) {
 							//our window size cut it off?
