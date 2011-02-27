@@ -402,7 +402,7 @@ public class WimaxKeys extends Activity {
 				int offset = 100;
 				int start = 2100;
 				int count = start - offset; //3071 is the end of the file
-	            int end = ((partitionSize / 4)-1); //3072 then -1 is 3071
+				int end = ((partitionSize / 4)-1); //3072 then -1 is 3071
 				try {
 					while (count > 0) {
 						procWiMAX = catRange(device, count, offset);
