@@ -1,10 +1,14 @@
 package com.joeykrim.wimaxkeys;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
+import java.security.cert.X509Certificate;
+import java.security.cert.CertificateFactory;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -32,7 +36,10 @@ import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
 public class WimaxKeys extends Activity {
 
+
+
 	private Button wimaxRSAButton;
+	private Button wimaxVerifyButton;
 	private TextView finalResults;
 	private String wimaxPhone = null;
 	public static final String PREFS_NAME = "PrefFile";
@@ -43,6 +50,18 @@ public class WimaxKeys extends Activity {
 	private static String LOG_TAG = "WimaxKeyCheck";
 	private static String PHONE_EVO = "EVO";
 	private static String PHONE_SHIFT = "EVO Shift";
+	private static String RESULT_SUCCESS = "Success";
+	private static String RESULT_FAIL = "Fail";
+	private static String RESULT_ERROR = "error";
+	private static String RESULT_KEY_FOUND = "RSAKeyPresent";
+	private static String RESULT_KEY_NOT_FOUND = "not found";
+	private static String RESULT_CERT_NOT_FOUND = "not found";
+	private static String RESULT_NO_PARTITION = "NoWiMAXPartition";
+	private static String RESULT_NO_DEVICE = "RSACertNoDevice";
+	private static String RESULT_NO_MATCH = "RSACertNoMatch";
+	private static String RESULT_MATCH = "RSACertMatch";
+	private static String RESULT_NOT_COMPATABLE = "Not Compatible";
+	private static String RESULT_CERT_ERROR = "RSACertVerifyError";
 	
 	// Google Analytics Events
 	private static String GAE_APP_VERSION = "LocalAppVersion";
@@ -53,6 +72,9 @@ public class WimaxKeys extends Activity {
 	private static String GAE_DISCLAIMER = "DisclaimerDialog";
 	private static String GAE_WIMAX_CHECK = "WiMAxCheck";
 	private static String GAE_WIMAX_RESULT = "WiMAXResults";
+	private static String GAE_WIMAX_VERIFY = "WiMaxVerify";
+	private static String GAE_WIMAX_KEY_START = "WiMAXKeyStart";
+	private static String GAE_WIMAX_KEY_COUNT = "WiMAXKeyCount";
 
 	GoogleAnalyticsTracker tracker;
 
@@ -66,6 +88,8 @@ public class WimaxKeys extends Activity {
 
 		tracker = GoogleAnalyticsTracker.getInstance();
 		tracker.start("", this);
+
+		me = this;
 
 		/** Thanks AntiSocial!
 		 * http://developer.android.com/reference/android/os/Build.html */ 
@@ -82,17 +106,17 @@ public class WimaxKeys extends Activity {
 		finalResults = (TextView) findViewById(R.id.FinalResults);
 
 		wimaxRSAButton = (Button) findViewById(R.id.wimaxRSAButton);
-
+		
 		wimaxRSAButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				tracker.trackEvent(GAE_BUTTON, "WiMAXCheck", null, 0);
+				tracker.trackEvent(GAE_BUTTON, GAE_WIMAX_CHECK, null, 0);
 				disableButtons();
 				if(canSU()) {
-				tracker.trackEvent(GAE_ROOT_RESULT, "Success", null, 0);
+				tracker.trackEvent(GAE_ROOT_RESULT, RESULT_SUCCESS, null, 0);
 				showToast(getString(R.string.rootSuccess));
 					setWimaxPhone();
 					if(!PHONE_EVO.equals(wimaxPhone) && !PHONE_SHIFT.equals(wimaxPhone)) {
-						tracker.trackEvent(GAE_WIMAX_CHECK, "Not Compatible", null, 0);
+						tracker.trackEvent(GAE_WIMAX_CHECK, RESULT_NOT_COMPATABLE, null, 0);
 						finalResults.setTextColor(getResources().getColor(R.color.fail_text));
 						wimaxRSAButton.setTextColor(getResources().getColor(R.color.fail_button));
 						finalResults.setText(getString(R.string.notCompatible));
@@ -102,7 +126,7 @@ public class WimaxKeys extends Activity {
 					}
 					mTask = new WiMaxCheckTask().execute();
 				} else {
-					tracker.trackEvent(GAE_ROOT_RESULT, "Fail", null, 0);
+					tracker.trackEvent(GAE_ROOT_RESULT, RESULT_FAIL, null, 0);
 					wimaxRSAButton.setTextColor(getResources().getColor(R.color.fail_button));
 					finalResults.setTextColor(getResources().getColor(R.color.fail_text));
 					finalResults.setText(getString(R.string.rootFail));
@@ -110,6 +134,34 @@ public class WimaxKeys extends Activity {
 				}
 				tracker.dispatch();
 				enableButtons();
+			}
+		} );
+
+		wimaxVerifyButton = (Button) findViewById(R.id.wimaxVerifyButton);
+
+		wimaxVerifyButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				tracker.trackEvent(GAE_BUTTON, GAE_WIMAX_VERIFY, null, 0);
+				disableButtons();
+				setWimaxPhone();
+
+				if(PHONE_EVO.equals(wimaxPhone)) {
+					tracker.trackEvent(GAE_WIMAX_VERIFY, PHONE_EVO, null, 0);
+					tracker.dispatch();
+				} else if(PHONE_SHIFT.equals(wimaxPhone)) {
+					tracker.trackEvent(GAE_WIMAX_VERIFY, PHONE_SHIFT, null, 0);
+					tracker.dispatch();
+				} else {
+					tracker.trackEvent(GAE_WIMAX_VERIFY, RESULT_NOT_COMPATABLE, null, 0);
+					finalResults.setTextColor(getResources().getColor(R.color.fail_text));
+					wimaxVerifyButton.setTextColor(getResources().getColor(R.color.fail_button));
+					finalResults.setText(getString(R.string.notCompatible));
+					showToast(getString(R.string.notCompatible));
+					enableButtons();
+					tracker.dispatch();
+					return;
+				}
+				mTask = new WiMaxValidateTask().execute();
 			}
 		} );
 
@@ -137,10 +189,12 @@ public class WimaxKeys extends Activity {
 
 	private void disableButtons() {
 		wimaxRSAButton.setEnabled(false);
+		wimaxVerifyButton.setEnabled(false);
 	}
 
 	private void enableButtons() {
 		wimaxRSAButton.setEnabled(true);
+		wimaxVerifyButton.setEnabled(true);
 	}
 
 	/** http://developer.android.com/guide/topics/ui/menus.html */
@@ -216,7 +270,7 @@ public class WimaxKeys extends Activity {
 				dialog = null;
 		}
 		return dialog;
-	} 
+	}
 
 	/** thanks slushpupie */
 	@Override
@@ -258,6 +312,7 @@ public class WimaxKeys extends Activity {
 				line = data.readLine();
 			}
 		} catch (Exception e) {
+			Log.e(LOG_TAG, "Error reading build.prop", e);
 			wimaxPhone = null;
 		}
 		wimaxPhone = null;
@@ -297,29 +352,60 @@ public class WimaxKeys extends Activity {
 	private void parseCheckResult(String result) {
 		/** EditText text = (EditText)findViewById(R.id.FinalResults); */
 
-		if("found".equals(result)) {
-			tracker.trackEvent(GAE_WIMAX_RESULT, "RSAKeyPresent", null, 0);
+		if(RESULT_KEY_FOUND.equals(result)) {
+			tracker.trackEvent(GAE_WIMAX_RESULT, RESULT_KEY_FOUND, null, 0);
 			finalResults.setTextColor(getResources().getColor(R.color.success_text));
 			wimaxRSAButton.setTextColor(getResources().getColor(R.color.success_button));
 			finalResults.setText(getString(R.string.WiMAXKeyPresent, wimaxPhone));
 			showToast(getString(R.string.WiMAXKeyPresent, wimaxPhone));
-		} else if("not found".equals(result)) {
-			tracker.trackEvent(GAE_WIMAX_RESULT, "RSAKeyMissing", null, 0);
+		} else if(RESULT_KEY_NOT_FOUND.equals(result)) {
+			tracker.trackEvent(GAE_WIMAX_RESULT, RESULT_KEY_NOT_FOUND, null, 0);
 			finalResults.setTextColor(getResources().getColor(R.color.fail_text));
 			wimaxRSAButton.setTextColor(getResources().getColor(R.color.fail_button));
 			finalResults.setText(getString(R.string.WiMAXKeyMissing, wimaxPhone));
 			showToast(getString(R.string.WiMAXKeyMissing, wimaxPhone));
 		} else {
-			tracker.trackEvent(GAE_WIMAX_RESULT, "Error", null, 0);
+			tracker.trackEvent(GAE_WIMAX_RESULT, RESULT_ERROR, null, 0);
 			finalResults.setTextColor(getResources().getColor(R.color.fail_text));
 			wimaxRSAButton.setTextColor(getResources().getColor(R.color.fail_button));
-			tracker.trackEvent(GAE_WIMAX_RESULT, "NoWiMAXPartition", null, 0);
+			tracker.trackEvent(GAE_WIMAX_RESULT, RESULT_NO_PARTITION, null, 0);
 			finalResults.setText(getString(R.string.noWiMAXPartition));
 			showToast(getString(R.string.noWiMAXPartition));
 		}
 		tracker.dispatch();
 		enableButtons();
-	} 
+	}
+
+	private void parseVerifyResult(String result) {
+
+		if(RESULT_MATCH.equals(result)) {
+			tracker.trackEvent(GAE_WIMAX_RESULT, RESULT_MATCH, null, 0);
+			finalResults.setTextColor(getResources().getColor(R.color.success_text));
+			wimaxVerifyButton.setTextColor(getResources().getColor(R.color.success_button));
+			finalResults.setText(getString(R.string.WiMAXCertMatch));
+			showToast(getString(R.string.WiMAXCertMatch));
+		} else if(RESULT_NO_MATCH.equals(result)) {
+			tracker.trackEvent(GAE_WIMAX_RESULT, RESULT_NO_MATCH, null, 0);
+			finalResults.setTextColor(getResources().getColor(R.color.warn_text));
+			wimaxVerifyButton.setTextColor(getResources().getColor(R.color.warn_button));
+			finalResults.setText(getString(R.string.WiMAXCertNoMatch));
+			showToast(getString(R.string.WiMAXCertNoMatch));
+		} else if(RESULT_NO_DEVICE.equals(result)) {
+			tracker.trackEvent(GAE_WIMAX_RESULT, RESULT_NO_DEVICE, null, 0);
+			finalResults.setTextColor(getResources().getColor(R.color.warn_text));
+			wimaxVerifyButton.setTextColor(getResources().getColor(R.color.warn_button));
+			finalResults.setText(getString(R.string.WiMAXCertNoDevice));
+			showToast(getString(R.string.WiMAXCertNoDevice));
+		} else {
+			finalResults.setTextColor(getResources().getColor(R.color.fail_text));
+			wimaxVerifyButton.setTextColor(getResources().getColor(R.color.fail_button));
+			tracker.trackEvent(GAE_WIMAX_RESULT, RESULT_CERT_ERROR, null, 0);
+			finalResults.setText(getString(R.string.WiMAXCertError));
+			showToast(getString(R.string.WiMAXCertError));
+		}
+		tracker.dispatch();
+		enableButtons();
+	}
 
 	/** setGravity adjustments - http://3.ly/sP6b */
 	public void showToast(String toast) {
@@ -338,6 +424,156 @@ public class WimaxKeys extends Activity {
 		}
 		tracker.dispatch();
 		super.onDestroy();
+	}
+
+	class WiMaxValidateTask extends AsyncTask<Void, Void, String> {
+		ProgressDialog mDialog = new ProgressDialog(WimaxKeys.this);
+		boolean wimaxEnabled = false;
+
+		@Override
+		protected void onPreExecute() {
+			mDialog.setMessage(getString(R.string.WiMAXKeyCheckMsg));
+			mDialog.setCancelable(false);
+			mDialog.show();
+		}
+
+		@Override
+		protected String doInBackground(Void... params) {
+
+			if (wimaxPhone != null) {
+				String pem = null;
+				String mac = null;
+
+				Process process = null;
+				String device = null;
+				int count = 100;
+				int start = 2100 - count; //3071 is the end of the file
+
+				if ("supersonic".equals(wimaxPhone)) {
+					device = "/dev/mtd/mtd0ro";
+				} else if("speedy".equals(wimaxPhone)) {
+					device = "/dev/block/mmcblk0p25";
+				} else {
+					return RESULT_ERROR;
+				}
+				
+				try {
+					boolean foundStart = false;
+					boolean foundEnd = false;
+					while (start > 0) {
+						process = catRange(device, start, count);
+						if(process == null) {
+							return RESULT_ERROR;
+						}
+
+						StringBuilder sb = new StringBuilder();
+
+
+						BufferedReader data = new BufferedReader(new InputStreamReader(process.getInputStream()));
+						String line = data.readLine();
+						while (line != null) {
+							if(line.contains("-----BEGIN CERTIFICATE-----")) {
+								foundStart = true;
+								line = line.substring(line.indexOf("-----BEGIN CERTIFICATE-----"));
+							} 
+							//no else here- they might be on the same line.
+							if(line.contains("-----END CERTIFICATE-----")) {
+								foundEnd = true;
+								line = line.substring(0,line.indexOf("-----END CERTIFICATE-----")+25);
+							}
+
+							if(foundStart) {
+								sb.append(line).append("\n");
+							}
+							if(foundEnd) {
+								pem = sb.toString();
+								break;
+							}
+							line = data.readLine();
+						}
+
+						if(foundStart && foundEnd) {
+							break;
+						} else {
+							if(foundStart) {
+								count++;
+							} else if(foundEnd) {
+								start--;
+							} else {
+								start = start - count;
+							}
+						} 
+					}
+
+					if(pem == null || !foundStart || !foundEnd) {
+						//never found the whole certificate
+						return RESULT_CERT_NOT_FOUND;
+					}
+
+					// Get the MAC address of the wimax0 device
+
+					File file = new File("/sys/class/net/wimax0/address");
+					try {
+						BufferedReader data = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+						mac = data.readLine();
+					} catch (FileNotFoundException e) {
+						return RESULT_NO_DEVICE;
+					}
+
+
+					if(mac == null || mac.equals("")) {
+						return RESULT_NO_DEVICE;
+					}
+
+
+
+					//skip the header/footer
+					//-----BEGIN CERTIFICATE----- = 27
+					//-----END CERTIFICATE----- = 25
+					if(pem.length() < 52) {
+						//we shouldnt be able to get here
+						return RESULT_CERT_NOT_FOUND;
+					}
+					String b64 = pem.substring(27,pem.length()-25);
+
+					//Decode the PEM certificate to DER
+					ByteArrayInputStream der = new ByteArrayInputStream(Base64.decode(b64));
+					// Get the X509Certificate object from BouncyCastle
+					X509Certificate cert = (X509Certificate) CertificateFactory.getInstance("X.509", "BC").generateCertificate(der);
+					// Get the issuer's DN, and lowercase it
+					String dn = cert.getSubjectX500Principal().getName("RFC2253").toLowerCase();
+
+					// The cert does not delimit the mac, so remove the :'s
+					mac = mac.toLowerCase().replaceAll(":","");
+
+					//see if the DN has the MAC in it
+					if(dn.contains(mac)) 
+						return RESULT_MATCH;
+					else
+						return RESULT_NO_MATCH;
+				} catch (Exception e) {
+					Log.d(LOG_TAG,RESULT_ERROR,e);
+					//TODO
+				}
+
+			}
+			return RESULT_ERROR;
+		}
+
+		@Override
+		protected void onPostExecute(String result) {
+			
+			if (isCancelled()) {
+				return;
+			}
+
+			if (mDialog != null && mDialog.isShowing()) {
+				mDialog.dismiss();
+			}
+
+			parseVerifyResult(result);
+			mTask = null;
+		}
 	}
 
 	/** thanks birbeck */
@@ -370,6 +606,7 @@ public class WimaxKeys extends Activity {
 				}
 				BufferedReader data = null;
 				try {
+<<<<<<< HEAD
 				    File file = new File(partitionFilename);
 				    data = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
 				    String line = null;
@@ -408,6 +645,12 @@ public class WimaxKeys extends Activity {
 						procWiMAX = catRange(device, count, offset);
 						if(procWiMAX == null) {
 							return "error";
+=======
+					while (start > 0) {
+						process = catRange(device, start, count);
+						if(process == null) {
+							return RESULT_ERROR;
+>>>>>>> keyverify
 						}
 						BufferedReader br = new BufferedReader(new InputStreamReader(procWiMAX.getInputStream()));
 						String line = br.readLine();
@@ -421,12 +664,17 @@ public class WimaxKeys extends Activity {
 								foundEnd = true;
 								break;
 							}
+<<<<<<< HEAD
 							
 							line = br.readLine();
+=======
+
+							line = data.readLine();
+>>>>>>> keyverify
 						}
 						if(foundStart || foundEnd) {
 							//our window size cut it off?
-							
+
 							if(foundStart && !foundEnd) {
 								//shouldnt be more than a few blocks
 								offset++;
@@ -435,24 +683,29 @@ public class WimaxKeys extends Activity {
 								count--;
 								continue;
 							} else {
+<<<<<<< HEAD
 								if (String.valueOf(count) != null) { tracker.trackEvent("WiMAXKeyStart", String.valueOf(count), null, 0); }
 								if (String.valueOf(offset) != null) { tracker.trackEvent("WiMAXKeyCount", String.valueOf(offset), null, 0); }
+=======
+								if (String.valueOf(start) != null) { tracker.trackEvent(GAE_WIMAX_KEY_START, String.valueOf(start), null, 0); }
+								if (String.valueOf(count) != null) { tracker.trackEvent(GAE_WIMAX_KEY_COUNT, String.valueOf(count), null, 0); }
+>>>>>>> keyverify
 								tracker.dispatch();
-								return "found";
+								return RESULT_KEY_FOUND;
 							}
 						}
 						
 						count = count - offset;
 					}
 					//never found it
-					return "not found";
+					return RESULT_KEY_NOT_FOUND;
 				} catch (Exception e) {
-					Log.d(LOG_TAG,"error",e);
+					Log.d(LOG_TAG,RESULT_ERROR,e);
 					//TODO
 				}
-					
+
 			}
-			return "error";
+			return RESULT_ERROR;
 		}
 
 		@Override
