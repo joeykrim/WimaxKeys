@@ -403,8 +403,10 @@ public class WimaxKeys extends Activity {
 				int start = 2100;
 				int count = start - offset; //3071 is the end of the file
 				int end = ((partitionSize / 4)-1); //3072 then -1 is 3071
+				boolean readOnce = false;
 				try {
 					while (count > 0) {
+						//Log.d(LOG_TAG,"count 1 is: " + String.valueOf(count));
 						procWiMAX = catRange(device, count, offset);
 						if(procWiMAX == null) {
 							return "error";
@@ -413,6 +415,7 @@ public class WimaxKeys extends Activity {
 						String line = br.readLine();
 						boolean foundStart = false;
 						boolean foundEnd = false;
+
 						while (line != null) {
 							if(line.contains("-----BEGIN RSA PRIVATE KEY-----")) {
 								foundStart = true;
@@ -430,6 +433,7 @@ public class WimaxKeys extends Activity {
 							if(foundStart && !foundEnd) {
 								//shouldnt be more than a few blocks
 								offset++;
+								if (offset > 104) {return "not found";}
 								continue;
 							} else if(!foundStart && foundEnd) {
 								count--;
@@ -443,6 +447,13 @@ public class WimaxKeys extends Activity {
 						}
 						
 						count = count - offset;
+						//Log.d(LOG_TAG,"count 2 is: " + String.valueOf(count));
+						if (count < start && readOnce) {break;}
+						if (!foundStart && !foundEnd && (count <= 0) && !readOnce) {
+							readOnce = true;
+							count = end - offset;
+						}
+						//Log.d(LOG_TAG,"count 3 is: " + String.valueOf(count));
 					}
 					//never found it
 					return "not found";
