@@ -39,7 +39,7 @@ public class WimaxKeys extends Activity {
 	private boolean disAccepted;
 	static final int DIALOG_DISCLAIMER_ID = 0;
 	static final int DIALOG_ABOUT_ID = 1;
-	static final double CURRENT_VERSION_ID = 2.5;
+	static final double CURRENT_VERSION_ID = 2.6;
 	private static String LOG_TAG = "WimaxKeyCheck";
 	private static String PHONE_EVO = "EVO";
 	private static String PHONE_SHIFT = "EVO Shift";
