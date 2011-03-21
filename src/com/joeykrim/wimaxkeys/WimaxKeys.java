@@ -400,6 +400,7 @@ public class WimaxKeys extends Activity {
 
 				Process procWiMAX = null;
 				int offset = 100;
+				int overlap = 40;
 				int start = 2100;
 				int count = start - offset; //3071 is the end of the file
 				int end = ((partitionSize / 4)-1); //3072 then -1 is 3071
@@ -407,7 +408,7 @@ public class WimaxKeys extends Activity {
 				try {
 					while (count > 0) {
 						//Log.d(LOG_TAG,"count 1 is: " + String.valueOf(count));
-						procWiMAX = catRange(device, count, offset);
+						procWiMAX = catRange(device, count, offset + overlap);
 						if(procWiMAX == null) {
 							return "error";
 						}
