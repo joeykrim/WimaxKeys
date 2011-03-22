@@ -113,20 +113,9 @@ public class WimaxKeys extends Activity {
 			}
 		} );
 
-		Button authorButton = (Button) findViewById(R.id.authorButton);
-
-		/** thanks AntiSociaL */
-		authorButton.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				tracker.trackEvent(GAE_BUTTON, "AuthorWebSite", null, 0);
-				tracker.dispatch();
-				String url = "http://www.joeyconway.com";
-				/** Intent i = new Intent(Intent.ACTION_VIEW);
-				 * i.setData(Uri.parse(url)); */ 
-				Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-				startActivity(i);
-			}
-		} );
+		TextView author = (TextView) findViewById(R.id.author);
+		author.setMovementMethod(LinkMovementMethod.getInstance());
+		
 		TextView credits = (TextView) findViewById(R.id.Credits);
 		credits.setMovementMethod(LinkMovementMethod.getInstance());
 		/** http://developer.android.com/guide/topics/data/data-storage.html#pref */

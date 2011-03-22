@@ -69,15 +69,11 @@
 	android:layout_gravity="center"></TextView>
 <View android:layout_width="fill_parent"
 	android:layout_height="2dip" android:background="#FFFFFFFF" />
-<TextView android:text="@string/authorName"
-	android:id="@+id/joeykrim" 
+<TextView android:text="@string/author"
+	android:id="@+id/author" 
 	android:layout_width="wrap_content" 
 	android:layout_height="wrap_content"
-	android:textColor="#ffffffff"></TextView>	
-<Button android:text="@string/authorWebSite" 
-	android:id="@+id/authorButton" 
-	android:layout_width="wrap_content" 
-	android:layout_height="wrap_content"></Button>
+	android:textColor="#ffffffff"></TextView>
 <TextView android:text=" " 
 	android:id="@+id/Spacer4" 
 	android:layout_width="fill_parent" 
