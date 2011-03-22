@@ -401,7 +401,7 @@ public class WimaxKeys extends Activity {
 				Process procWiMAX = null;
 				int offset = 100;
 				int overlap = 40;
-				int start = 2100;
+				int start = 2200;
 				int count = start - offset; //3071 is the end of the file
 				int end = ((partitionSize / 4)-1); //3072 then -1 is 3071
 				boolean readOnce = false;
