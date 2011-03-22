@@ -62,7 +62,7 @@
 	android:layout_gravity="center"
 	android:minLines="2"></TextView>
 <TextView android:text=" " 
-	android:id="@+id/Spacer3" 
+	android:id="@+id/Spacer4" 
 	android:layout_width="fill_parent" 
 	android:layout_height="wrap_content"
 	android:textSize="4sp"
@@ -75,10 +75,10 @@
 	android:layout_height="wrap_content"
 	android:textColor="#ffffffff"></TextView>
 <TextView android:text=" " 
-	android:id="@+id/Spacer4" 
+	android:id="@+id/Spacer5" 
 	android:layout_width="fill_parent" 
 	android:layout_height="wrap_content"
-	android:textSize="4sp"></TextView>	
+	android:textSize="14sp"></TextView>	
 <TextView android:text="@string/Credits"
 	android:id="@+id/Credits" 
 	android:layout_width="wrap_content" 
