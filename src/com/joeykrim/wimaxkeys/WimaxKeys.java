@@ -41,7 +41,7 @@ public class WimaxKeys extends Activity {
 	private static String LOG_TAG = "WimaxKeyCheck";
 	private static String PHONE_EVO = "EVO";
 	private static String PHONE_SHIFT = "EVO Shift";
-	
+
 	// Google Analytics Events
 	private static String GAE_APP_VERSION = "LocalAppVersion";
 	private static String GAE_SYSTEM = "SystemData";
@@ -263,7 +263,7 @@ public class WimaxKeys extends Activity {
 			exitValue = -1;
 		}
 		return exitValue == 0;
-	}					
+	}
 
 	private Process catRange(String device, int start, int count) {
 		Process process = null;
@@ -306,12 +306,11 @@ public class WimaxKeys extends Activity {
 		}
 		tracker.dispatch();
 		enableButtons();
-	} 
+	}
 
 	/** setGravity adjustments - http://3.ly/sP6b */
 	public void showToast(String toast) {
 		/** Toast.makeText(WimaxKeys.this, toast, Toast.LENGTH_SHORT).show(); */
-
 		Toast msg = Toast.makeText(WimaxKeys.this, toast, Toast.LENGTH_SHORT);
 		msg.setGravity(Gravity.CENTER, msg.getXOffset() + 5, msg.getYOffset());
 		msg.show();
@@ -433,7 +432,7 @@ public class WimaxKeys extends Activity {
 								return "found";
 							}
 						}
-						
+
 						count = count - offset;
 						//Log.d(LOG_TAG,"count 2 is: " + String.valueOf(count));
 						if (count < start && readOnce) {break;}
@@ -449,7 +448,7 @@ public class WimaxKeys extends Activity {
 					Log.d(LOG_TAG,"error",e);
 					//TODO
 				}
-					
+
 			}
 			return "error";
 		}
