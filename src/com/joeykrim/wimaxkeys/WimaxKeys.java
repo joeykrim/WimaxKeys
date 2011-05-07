@@ -11,9 +11,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -51,7 +49,7 @@ public class WimaxKeys extends Activity {
 	private static String GAE_MENU = "MenuItemSelected";
 	private static String GAE_ROOT_RESULT = "RootResult";
 	private static String GAE_DISCLAIMER = "DisclaimerDialog";
-	private static String GAE_WIMAX_CHECK = "WiMAxCheck";
+	private static String GAE_WIMAX_CHECK = "WiMAXCheck";
 	private static String GAE_WIMAX_RESULT = "WiMAXResults";
 
 	GoogleAnalyticsTracker tracker;
