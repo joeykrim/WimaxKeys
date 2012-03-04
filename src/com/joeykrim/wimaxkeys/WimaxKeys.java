@@ -12,6 +12,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -37,10 +38,10 @@ public class WimaxKeys extends Activity {
     private boolean disAccepted;
     static final int DIALOG_DISCLAIMER_ID = 0;
     static final int DIALOG_ABOUT_ID = 1;
-    static final double CURRENT_VERSION_ID = 2.9;
     private static String LOG_TAG = "WimaxKeyCheck";
     private static String PHONE_EVO = "EVO";
     private static String PHONE_SHIFT = "EVO Shift";
+    private String currentVersionID;
 
     // Google Analytics Events
     private static String GAE_APP_VERSION = "LocalAppVersion";
@@ -61,13 +62,14 @@ public class WimaxKeys extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+        setUpLocalVersionID();
 
         tracker = GoogleAnalyticsTracker.getInstance();
         tracker.start("", this);
 
         /** Thanks AntiSocial
          * http://developer.android.com/reference/android/os/Build.html */ 
-        tracker.trackEvent(GAE_APP_VERSION, String.valueOf(CURRENT_VERSION_ID), null, 0);
+        tracker.trackEvent(GAE_APP_VERSION, currentVersionID, null, 0);
 
         if (Build.MANUFACTURER != null) { tracker.trackEvent(GAE_SYSTEM, Build.MANUFACTURER, null, 0); } 
         if (Build.BRAND != null) { tracker.trackEvent(GAE_SYSTEM, Build.BRAND, null, 0); }
@@ -197,7 +199,7 @@ public class WimaxKeys extends Activity {
             //break;
         case DIALOG_ABOUT_ID:
             AlertDialog.Builder builder1 = new AlertDialog.Builder(this);
-            builder1.setMessage(getString(R.string.versionInfo, CURRENT_VERSION_ID) + System.getProperty("line.separator") + getString(R.string.aboutMsg))
+            builder1.setMessage(getString(R.string.versionInfo, currentVersionID) + System.getProperty("line.separator") + getString(R.string.aboutMsg))
             .setCancelable(false) .setTitle(R.string.menuAbout)
             .setPositiveButton(R.string.menuAboutOkay, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) { }
@@ -280,7 +282,7 @@ public class WimaxKeys extends Activity {
             toProcess.writeBytes(cmd);
             toProcess.flush();
         } catch(Exception e) {
-            Log.e(LOG_TAG, "Exception while trying to run: '" + cmd + "' " + e.getMessage());
+            Log.e(LOG_TAG, getString(R.string.catRangeException) + "'" + cmd + "' " + e.getMessage());
             process = null;
         }
         return process;
@@ -471,6 +473,19 @@ public class WimaxKeys extends Activity {
 
             parseCheckResult(result);
             mTask = null;
+        }
+    }
+
+    //http://stackoverflow.com/questions/6593592/get-application-version-programatically-in-android
+    private void setUpLocalVersionID(){
+        PackageInfo localAppPInfo = null;
+        try {
+            localAppPInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+            currentVersionID = localAppPInfo.versionName;
+            //currentAppVersionCode = localAppPInfo.versionCode;
+        } catch (Exception e) {
+            Log.e(LOG_TAG, getString(R.string.localVersionException) + e);
+            currentVersionID = "3.0";
         }
     }
 }

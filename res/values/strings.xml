@@ -23,4 +23,8 @@
     <string name="WiMAXKeyMissing">Sorry, your WiMAX RSA key is missing!</string>
     <string name="WiMAXKeyPresent">Congratulations! Your HTC %s RSA key is present!</string>
     <string name="WiMAXKeyCheckMsg">Checking for the WiMAX RSA Key! This can take up to 45 seconds. Please be patient!</string>
+
+    <!-- Exceptions -->
+    <string name="localVersionException">Local version exception occurred: </string>
+    <string name="catRangeException">Exception while trying to run: </string>
 </resources>
