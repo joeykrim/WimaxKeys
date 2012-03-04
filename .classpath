@@ -3,6 +3,7 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
-	<classpathentry kind="lib" path="/home/joeykrim/eclipse/libGoogleAnalytics.jar"/>
+	<classpathentry kind="lib" path="/home/joeykrim/eclipse/android-libraries/GoogleAnalytics-1.4.2/libGoogleAnalytics.jar"/>
+	<classpathentry kind="lib" path="/home/joeykrim/eclipse/android-libraries/bugsense-trace-1-1-2.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

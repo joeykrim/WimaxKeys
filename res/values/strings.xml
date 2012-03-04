@@ -10,7 +10,7 @@
     <string name="menuAbout">About</string> 
     <string name="menuDisclaimer">Disclaimer</string>
     <string name="menuExit">Exit</string>
-    <string name="disclaimerMessage">In order to help further development by better understanding this application\'s usage, google analytics is employed to gather anonymous usage statistics.  Rest assured no personally identifiable information is ever shared and only information relating to this specific application\'s usage would be collected. Appreciate your support!</string>
+    <string name="disclaimerMessage">In order to help further development by better understanding this application\'s usage, google analytics and bugsense are employed to gather anonymous usage statistics.  Rest assured no personally identifiable information is ever shared and only information relating to this specific application\'s usage would be collected. Appreciate your support!</string>
     <string name="disclaimerAgree">Agree</string>
     <string name="disclaimerDisagree">Disagree</string>
     <string name="aboutMsg">All those mentioned in the credits have been extremely helpful! \nThanks for using my software! \n\n<a href="http://www.joeykrim.com">http://www.joeykrim.com</a></string>
