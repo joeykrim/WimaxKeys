@@ -27,4 +27,5 @@
     <!-- Exceptions -->
     <string name="localVersionException">Local version exception occurred: </string>
     <string name="catRangeException">Exception while trying to run: </string>
+    <string name="generalExceptionError">General exception error: </string>
 </resources>

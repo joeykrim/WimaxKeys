@@ -65,7 +65,7 @@ public class WimaxKeys extends Activity {
         setUpLocalVersionID();
 
         tracker = GoogleAnalyticsTracker.getInstance();
-        tracker.start("", this);
+        tracker.startNewSession("", this);
 
         /** Thanks AntiSocial
          * http://developer.android.com/reference/android/os/Build.html */ 
@@ -156,7 +156,7 @@ public class WimaxKeys extends Activity {
             case R.id.menuExit:
                 tracker.trackEvent(GAE_MENU, "menuExit", null, 0);
                 tracker.dispatch();
-                tracker.stop();
+                tracker.stopSession();
                 finish();
                 return true;
             default:
@@ -190,7 +190,7 @@ public class WimaxKeys extends Activity {
                 public void onClick(DialogInterface dialog, int id) {
                     tracker.trackEvent(GAE_DISCLAIMER, "DisclaimerDisagree", null, 0);
                     tracker.dispatch();
-                    tracker.stop();
+                    tracker.stopSession();
                     finish();
                 }
             } );
@@ -329,7 +329,7 @@ public class WimaxKeys extends Activity {
             mTask.cancel(true);
         }
         tracker.dispatch();
-        tracker.stop();
+        tracker.stopSession();
         super.onDestroy();
     }
 
@@ -454,8 +454,7 @@ public class WimaxKeys extends Activity {
                     //never found it
                     return "not found";
                 } catch (Exception e) {
-                    Log.d(LOG_TAG,"error",e);
-                    //TODO
+                    Log.d(LOG_TAG,getString(R.string.generalExceptionError) + e.getMessage());
                 }
             }
             return "error";
