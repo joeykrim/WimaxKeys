@@ -4,6 +4,9 @@
       android:versionCode="20"
       android:versionName="2.9">
     <supports-screens android:smallScreens="true" android:normalScreens="true" android:largeScreens="true" android:anyDensity="true" />
+    <uses-sdk android:minSdkVersion="7" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <application android:icon="@drawable/icon" android:label="@string/app_name">
         <activity android:name=".WimaxKeys"
                   android:label="@string/app_name"
@@ -14,7 +17,4 @@
             </intent-filter>
         </activity>
     </application>
-    <uses-sdk android:minSdkVersion="7" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 </manifest> 

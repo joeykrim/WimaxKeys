@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="Welcome">Check for your RSA encrypted WiMAX Keys!</string>
     <string name="app_name">WiMAX RSA Key Checker</string>
     <string name="warning"><u>Warning</u></string>
     <string name="warningMsg">Root permission is required to access the WiMAX partition.  \nOn a rare occasion, a WiMAX RSA key search could take up to 45 seconds.</string>
@@ -19,8 +18,6 @@
     <string name="versionInfo">Version %s</string>
     <string name="rootSuccess">Congratulations! You have root access!</string>
     <string name="rootFail">Sorry, you do not have root access. \nRoot access is required to verify WiMAX RSA key.</string>
-    <string name="busyboxSuccess">Congratulations! Busybox is installed correctly!</string>
-    <string name="busyboxFail">Sorry, you do not have Busybox installed correctly! \nFor proper Busybox installation, please search for the BusyBox app by Stericson in the market!</string>
     <string name="notCompatible">Sorry, this phone does not identify itself as an HTC EVO or an HTC Shift!</string>
     <string name="noWiMAXPartition">No WiMAX partition present at /dev/mtd/mtd0 for the EVO or /dev/block/mmcblk0p25 for the Shift</string>
     <string name="WiMAXKeyMissing">Sorry, your WiMAX RSA key is missing!</string>
