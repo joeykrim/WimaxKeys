@@ -28,4 +28,10 @@
     <string name="localVersionException">Local version exception occurred: </string>
     <string name="catRangeException">Exception while trying to run: </string>
     <string name="generalExceptionError">General exception error: </string>
+
+    <!-- Preference Static Names -->
+    <string name="prefDisclaimerAccepted">disclaimerAccepted</string>
+
+    <!-- Instances -->
+    <string name="instanceVariableFinalResults">finalResults</string>
 </resources>

@@ -27,6 +27,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bugsense.trace.BugSenseHandler;
 import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 
 public class WimaxKeys extends Activity {
@@ -52,6 +53,8 @@ public class WimaxKeys extends Activity {
     private static String GAE_DISCLAIMER = "DisclaimerDialog";
     private static String GAE_WIMAX_CHECK = "WiMAXCheck";
     private static String GAE_WIMAX_RESULT = "WiMAXResults";
+    private static String GAE_DISCLAIMER_AGREE = "DisclaimerAgree";
+    private static String GAE_DISCLAIMER_DISAGREE = "DisclaimerDisagree";
 
     GoogleAnalyticsTracker tracker;
 
@@ -64,6 +67,7 @@ public class WimaxKeys extends Activity {
         setContentView(R.layout.main);
         setUpLocalVersionID();
 
+        BugSenseHandler.setup(this, "");
         tracker = GoogleAnalyticsTracker.getInstance();
         tracker.startNewSession("", this);
 
@@ -113,15 +117,13 @@ public class WimaxKeys extends Activity {
             }
         } );
 
-        TextView author = (TextView) findViewById(R.id.author);
-        author.setMovementMethod(LinkMovementMethod.getInstance());
+        ((TextView) findViewById(R.id.author)).setMovementMethod(LinkMovementMethod.getInstance());
+        ((TextView) findViewById(R.id.Credits)).setMovementMethod(LinkMovementMethod.getInstance());
 
-        TextView credits = (TextView) findViewById(R.id.Credits);
-        credits.setMovementMethod(LinkMovementMethod.getInstance());
         /** http://developer.android.com/guide/topics/data/data-storage.html#pref */
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
-        disAccepted = settings.getBoolean("disclaimerAccepted", false);
-        if (! disAccepted) { showDialog(DIALOG_DISCLAIMER_ID); }
+        disAccepted = settings.getBoolean(getString(R.string.prefDisclaimerAccepted), false);
+        if (!disAccepted) showDialog(DIALOG_DISCLAIMER_ID);
     }
 
     private void disableButtons() {
@@ -177,10 +179,10 @@ public class WimaxKeys extends Activity {
             .setPositiveButton(R.string.disclaimerAgree, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                     if (!disAccepted) {
-                        tracker.trackEvent(GAE_DISCLAIMER, "DisclaimerAgree", null, 0);
+                        tracker.trackEvent(GAE_DISCLAIMER, GAE_DISCLAIMER_AGREE, null, 0);
                         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
                         SharedPreferences.Editor editor = settings.edit();
-                        editor.putBoolean("disclaimerAccepted", true);
+                        editor.putBoolean(getString(R.string.prefDisclaimerAccepted), true);
                         editor.commit();
                         tracker.dispatch();
                     }
@@ -188,7 +190,11 @@ public class WimaxKeys extends Activity {
             } ) 
             .setNegativeButton(R.string.disclaimerDisagree, new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
-                    tracker.trackEvent(GAE_DISCLAIMER, "DisclaimerDisagree", null, 0);
+                    tracker.trackEvent(GAE_DISCLAIMER, GAE_DISCLAIMER_DISAGREE, null, 0);
+                    SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+                    SharedPreferences.Editor editor = settings.edit();
+                    editor.putBoolean(getString(R.string.prefDisclaimerAccepted), false);
+                    editor.commit();
                     tracker.dispatch();
                     tracker.stopSession();
                     finish();
@@ -216,7 +222,7 @@ public class WimaxKeys extends Activity {
     /** thanks slushpupie */
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
-        savedInstanceState.putString("finalResults", finalResults.getText().toString());
+        savedInstanceState.putString(getString(R.string.instanceVariableFinalResults), finalResults.getText().toString());
         super.onSaveInstanceState(savedInstanceState);
     }
 
@@ -224,7 +230,7 @@ public class WimaxKeys extends Activity {
     @Override
     public void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        String finalResultsText = savedInstanceState.getString("finalResults");
+        String finalResultsText = savedInstanceState.getString(getString(R.string.instanceVariableFinalResults));
         if (finalResultsText != null) {
             finalResults.setText(finalResultsText);
         }
@@ -233,7 +239,7 @@ public class WimaxKeys extends Activity {
     private void setWimaxPhone() {
         if(wimaxPhone != null)
             return;
-        //grep supersonic /system/build.prop
+        //grep supersonic or speedy /system/build.prop
         try {
             File file = new File("/system/build.prop");
             BufferedReader data = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
