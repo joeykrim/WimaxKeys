@@ -1,6 +1,10 @@
 This is the WiMAX key checker found in the Android Market
 https://market.android.com/details?id=com.joeykrim.wimaxkeys 
 
+Required Libraries:
+Bugsense .jar: https://github.com/bugsense/bugsense-android/downloads
+Google Analytics .jar: http://dl.google.com/gaformobileapps/GoogleAnalyticsAndroid_1.4.2.zip
+
 Credits:
 
  * slushpupie: http://android.slushpupie.com
