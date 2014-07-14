@@ -42,6 +42,11 @@
 	android:layout_width="wrap_content" 
 	android:layout_height="wrap_content"
 	android:layout_gravity="center"></Button>
+<Button android:text="@string/verifyWimaxCert"
+	android:id="@+id/wimaxVerifyButton" 
+	android:layout_width="wrap_content" 
+	android:layout_height="wrap_content"
+	android:layout_gravity="center"></Button>
 <TextView android:text=" " 
 	android:id="@+id/Spacer3" 
 	android:layout_width="fill_parent" 

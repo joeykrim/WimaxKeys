@@ -17,4 +17,6 @@
    <color name="success_button">#ff005500</color>
    <color name="fail_text">#ffff0000</color>
    <color name="fail_button">#ffff0000</color>
+   <color name="warn_text">#ffffff00</color>
+   <color name="warn_button">#ffffff00</color>
 </resources>
